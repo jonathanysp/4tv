@@ -98,6 +98,7 @@ function init(){
 	fetchArticles();
 }
 
+//fetches xml
 function fetchArticles(){
 	$.jGFeed('http://dl.dropbox.com/u/112925/topNews.xml', function(xml){
 		feed = xml;
