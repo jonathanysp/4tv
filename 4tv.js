@@ -53,7 +53,7 @@ function init(){
 		left: '0%',
 		top: $(topDiv).height() + $(searchDiv).height() + $(searchDiv).padding().top*2,
 		width: '30%',
-		height: '80%',
+		height: '81%',
 		background: '#aaa',
 	})
 	root.append(listDiv);
@@ -100,17 +100,20 @@ function init(){
 
 function fetchArticles(){
 	$.jGFeed('http://dl.dropbox.com/u/112925/topNews.xml', function(xml){
-		saveFeed(xml);
+		feed = xml;
 		listTitles();
 	}, 10)
 }
 
-function saveFeed(xml){
-	feed = xml;
-}
-
 function listTitles(){
+	$(articleDiv).text("Articles fetched:")
+	var list = document.createElement('ul');
+	$(list).addClass('list');
+	$(articleDiv).append(list);
 	for (var i = 0; i < feed.entries.length; i++){
+		var title = document.createElement('li');
+		$(title).text(feed.entries[i].title);
+		$(list).append(title);
 		console.log(feed.entries[i].title);
 	}
 }
