@@ -51,7 +51,7 @@ function init(){
 	$(listDiv).css({
 		position: 'absolute',
 		left: '0%',
-		top: $(topDiv).height() + $(searchDiv).height() + $(searchDiv).padding().top*2,
+		top: $(topDiv).height() + $(searchDiv).outerHeight(),
 		width: '30%',
 		height: '81%',
 		background: '#aaa',
