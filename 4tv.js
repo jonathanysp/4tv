@@ -6,7 +6,12 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
-var feed;
+var articleTitle;
+var articleBody;
+var articleArray = [];
+var feed; //used for list of articles, details will use diffbot or testArticles
+var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
+var selectedArticle;
 
 //sets out basic layout
 function init(){
@@ -31,6 +36,10 @@ function init(){
 		height: '100%',
 		'font-size': '150%',
 	})
+	$(searchBox).change(filterArticleElements($(searchBox).val()))
+	$(searchBox).keyup(function(){
+		filterArticleElements($(searchBox).val())
+	});
 
 	searchDiv = document.createElement('div');
 	$(searchDiv).addClass("searchDiv");
@@ -55,6 +64,8 @@ function init(){
 		width: '30%',
 		height: '81%',
 		background: '#aaa',
+		'overflow-y': 'auto',
+		'overflow-x': 'hidden',
 	})
 	root.append(listDiv);
 
@@ -77,11 +88,28 @@ function init(){
 		right: '0%',
 		top: '0%',
 		height: '92%',
-		width: '68%',
-		padding: '1%',
+		width: '66%',
+		padding: '0% 2%',
 		background: '#eee',
+		'overflow-y': 'auto',
 	})
 	root.append(articleDiv);
+
+	articleTitle = document.createElement('h1');
+	$(articleTitle).addClass('articleTitle');
+	$(articleTitle).css({
+		'font-size': '250%'
+	})
+
+	articleBody = document.createElement('p');
+	$(articleBody).addClass('articleBody');
+	$(articleBody).css({
+		'font-size': '200%',
+		'line-height': '150%',
+	})
+
+	$(articleDiv).append(articleTitle);
+	$(articleDiv).append(articleBody);
 
 	optionsDiv = document.createElement('div');
 	$(optionsDiv).addClass('optionsDiv');
@@ -95,26 +123,137 @@ function init(){
 	})
 	root.append(optionsDiv);
 
-	fetchArticles();
+	getArticleList();
 }
 
 //fetches xml
-function fetchArticles(){
+//only use testArticles from now and dont fetch;
+function getArticleList(){
 	$.jGFeed('http://dl.dropbox.com/u/112925/topNews.xml', function(xml){
 		feed = xml;
-		listTitles();
+		makeArticleListElement(feed.entries[0], true);
+		for (var i = 1; i < feed.entries.length; i++){
+			makeArticleListElement(feed.entries[i]);
+		}
+		getArticleDetails(feed.entries[0].link);
 	}, 10)
 }
 
-function listTitles(){
-	$(articleDiv).text("Articles fetched:")
-	var list = document.createElement('ul');
-	$(list).addClass('list');
-	$(articleDiv).append(list);
-	for (var i = 0; i < feed.entries.length; i++){
-		var title = document.createElement('li');
-		$(title).text(feed.entries[i].title);
-		$(list).append(title);
-		console.log(feed.entries[i].title);
+//uses diffbot (only use in final build)
+//gets article details and sets it as main display article
+//maybe do some caching??
+function getArticleDetails(link){
+	/*
+	var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
+	$.getJSON(req, function(json){
+		console.log(json)
+		articleDetails.push(json);
+	});*/
+
+	//for returns article details when supplied with link
+	setDisplayedArticle(testArticles[link]);
+}
+
+//contains title, date, snippet
+function makeArticleListElement(data, selected){
+	var articleElement = document.createElement('div');
+	$(articleElement).data('data', data);
+	$(articleElement).addClass('articleElement');
+	$(articleElement).attr('id', data.title);
+	$(articleElement).css({
+		border: '1px solid black',
+		background: '#ddd',
+		padding: '1% 3%',
+	})
+	if(selected){
+		$(articleElement).css({
+			background:'#888',
+		})
 	}
+	$(listDiv).append(articleElement);
+	$(articleElement).outerWidth($(listDiv).outerWidth());
+	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
+
+	var elementTitle = document.createElement('div');
+	$(elementTitle).addClass('elementTitle');
+	$(elementTitle).css({
+		height: '40%',
+		width: '100%',
+		'font-size': '120%',
+		'font-Weight': 'Bold',
+	})
+	$(elementTitle).text(data.title);
+	$(articleElement).append(elementTitle)
+
+	var elementSnippet = document.createElement('div');
+	$(elementSnippet).addClass('elementSnippet');
+	$(elementSnippet).css({
+		height: '50%',
+		width: '100%',
+		'font-size': '100%',
+		'color': '#444',
+	})
+	$(elementSnippet).text(data.contentSnippet);
+	$(articleElement).append(elementSnippet)
+
+	//click function
+	$(articleElement).click(function(){
+		$('.articleElement').css({
+			background: '#ddd',
+		})
+		$(this).css({
+			background: '#888',
+		})
+		getArticleDetails($(this).data('data').link);
+	})
+}
+
+function filterArticleElements(text){
+	jQuery.expr[':'].Contains = function(a,i,m){
+    	return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+  	};
+  	if(text){
+		$('.articleElement').children(":not(:contains("+text+"))").parent().slideUp();
+		$('.articleElement').children(":contains("+text+")").parent().slideDown()
+	} else {
+		$('.articleElement').slideDown();
+	}
+}
+
+//shows title, text, media
+function setDisplayedArticle(data){
+	$(articleTitle).text(data.title);
+	$(articleBody).text(data.text);
+
+	//removes old images;
+	$('.articleImage').detach();
+	//finds the largest image by placing it in a tmp
+	//offscreen div and then appends it to the article
+	var imgHeights = [];
+	var images = [];
+	var offScreenDiv = document.createElement('div');
+	$(offScreenDiv).css({
+		position: 'absolute',
+		right: '-100%'
+	})
+	root.append(offScreenDiv);
+
+	if(data.media){
+		for (var i = 0; i < data.media.length; i++){
+			if(data.media.length > 0) {
+				var image = document.createElement('img');
+				$(image).addClass('articleImage');
+				image.src = data.media[i].link;
+				$(image).css({
+					float: 'right',
+				})
+				$(offScreenDiv).append(image);
+				imgHeights.push($(image).height());
+				images.push(image);
+			}
+		}
+	}
+	var index = imgHeights.indexOf(Math.max.apply(Math, imgHeights));
+	$(offScreenDiv).detach();
+	$(articleTitle).after(images[index]);
 }
