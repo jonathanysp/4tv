@@ -226,6 +226,8 @@ function filterArticleElements(text){
 //shows title, text, media
 function setDisplayedArticle(data){
 	$(articleTitle).text(data.title);
+	$(articleBody).children().detach();
+	$(articleBody).text('');
 	var text = data.text;
 	text = newlineToBr(text);
 	$(articleBody).append(text);
