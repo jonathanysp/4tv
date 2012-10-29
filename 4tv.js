@@ -208,10 +208,9 @@ function makeArticleListElement(data, selected){
 	})
 }
 
+
+//searches and filters through list, quite buggy, case sensitive right now
 function filterArticleElements(text){
-	jQuery.expr[':'].Contains = function(a,i,m){
-    	return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
-  	};
   	if(text){
 		$('.articleElement').children(":not(:contains("+text+"))").parent().slideUp();
 		$('.articleElement').children(":contains("+text+")").parent().slideDown()
