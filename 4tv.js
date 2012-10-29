@@ -129,7 +129,10 @@ function init(){
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
-	$.jGFeed('http://dl.dropbox.com/u/112925/topNews.xml', function(xml){
+	//var url = "http://www.npr.org/rss/rss.php?id=1001";
+	var url = 'http://dl.dropbox.com/u/112925/topNews.xml';
+
+	$.jGFeed(url, function(xml){
 		feed = xml;
 		makeArticleListElement(feed.entries[0], true);
 		for (var i = 1; i < feed.entries.length; i++){
@@ -146,11 +149,12 @@ function getArticleDetails(link){
 	/*
 	var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
 	$.getJSON(req, function(json){
-		console.log(json)
-		articleDetails.push(json);
-	});*/
-
-	//for returns article details when supplied with link
+		setDisplayedArticle(json);
+		//console.log(json)
+		//articleDetails.push(json);
+	});
+	*/
+	//returns article details when supplied with link
 	setDisplayedArticle(testArticles[link]);
 }
 
@@ -222,7 +226,9 @@ function filterArticleElements(text){
 //shows title, text, media
 function setDisplayedArticle(data){
 	$(articleTitle).text(data.title);
-	$(articleBody).text(data.text);
+	var text = data.text;
+	text = newlineToBr(text);
+	$(articleBody).append(text);
 
 	//removes old images;
 	$('.articleImage').detach();
@@ -253,6 +259,16 @@ function setDisplayedArticle(data){
 		}
 	}
 	var index = imgHeights.indexOf(Math.max.apply(Math, imgHeights));
+	$(images[index]).css({
+		'max-width': '50%',
+	})
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
+}
+
+function newlineToBr(string){
+	var regex = new RegExp("\\n","g");
+	//TODO: probably should replace it with something better than 2 <br>
+	var replace = "<br><br>";
+	return string.replace(regex,replace);
 }
