@@ -27,6 +27,22 @@ function init(){
 		width: '30%',
 		background: '#888',
 	})
+	//Logo
+	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
+
+	//Article
+	sectionSpan = document.createElement('span');
+	$(sectionSpan).addClass("sectionSpan");
+	$(sectionSpan).css({
+		position: 'absolute',
+		top: '15%',
+		left: '82%',
+		height: '100%',
+		'font-size': '1.5em',
+		'text-align': 'right',
+	})
+	$(sectionSpan).text('Articles');
+	$(topDiv).append(sectionSpan);
 	root.append(topDiv);
 
 	searchBox = document.createElement('input');
