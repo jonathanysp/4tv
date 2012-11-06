@@ -9,9 +9,12 @@ var optionsDiv;
 var articleTitle;
 var articleBody;
 var articleArray = [];
+var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
-var selectedArticle;
+var articleIndex;
+var mode = 'list';
+var scrollFactor = 10;
 
 //sets out basic layout
 function init(){
@@ -103,7 +106,7 @@ function init(){
 		position: 'absolute',
 		right: '0%',
 		top: '0%',
-		height: '92%',
+		height: '94%',
 		width: '66%',
 		padding: '0% 2%',
 		background: '#eee',
@@ -150,11 +153,11 @@ function getArticleList(){
 
 	$.jGFeed(url, function(xml){
 		feed = xml;
-		makeArticleListElement(feed.entries[0], true);
-		for (var i = 1; i < feed.entries.length; i++){
-			makeArticleListElement(feed.entries[i]);
+		for (var i = 0; i < feed.entries.length; i++){
+			articleArray.push(makeArticleListElement(feed.entries[i]));
 		}
-		getArticleDetails(feed.entries[0].link);
+		//getArticleDetails(feed.entries[0].link);
+		selectArticle(0);
 	}, 10)
 }
 
@@ -174,8 +177,56 @@ function getArticleDetails(link){
 	setDisplayedArticle(testArticles[link]);
 }
 
+function addToList(array){
+	for (var i = 0; i < array.length; i++){
+		$(listDiv).append(articleArray[i]);
+	}
+}
+
+function selectArticle(index){
+	$('.articleElement').css({
+		background: '#ddd',
+	})
+	$(articleArray[index]).css({
+		background:'#888',
+	})
+	$(articleArray[index]).click();
+}
+
+function nextArticle(){
+	if(articleIndex < articleArray.length - 1){
+		articleIndex++;
+		selectArticle(articleIndex);
+	}
+	if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
+		$(listDiv).animate({
+			scrollTop: $(articleArray[articleIndex - 1]).position().top + $(listDiv).scrollTop(),
+		}, 500)
+	}
+}
+
+function previousArticle(){
+	if(articleIndex == 0){
+		//focus search bar
+		mode = 'search';
+		$(searchBox).focus();		
+	} else {
+		articleIndex--;
+		selectArticle(articleIndex);
+	}
+	if($(articleArray[articleIndex]).position().top < 0){
+		var scrollArticle = articleIndex - 3;
+		if(scrollArticle < 0){
+			scrollArticle = 0;
+		}
+		$(listDiv).animate({
+			scrollTop: $(articleArray[scrollArticle]).position().top + $(listDiv).scrollTop(),
+		}, 500)
+	}
+}
+
 //contains title, date, snippet
-function makeArticleListElement(data, selected){
+function makeArticleListElement(data){
 	var articleElement = document.createElement('div');
 	$(articleElement).data('data', data);
 	$(articleElement).addClass('articleElement');
@@ -185,11 +236,6 @@ function makeArticleListElement(data, selected){
 		background: '#ddd',
 		padding: '1% 3%',
 	})
-	if(selected){
-		$(articleElement).css({
-			background:'#888',
-		})
-	}
 	$(listDiv).append(articleElement);
 	$(articleElement).outerWidth($(listDiv).outerWidth());
 	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
@@ -226,6 +272,8 @@ function makeArticleListElement(data, selected){
 		})
 		getArticleDetails($(this).data('data').link);
 	})
+
+	return articleElement;
 }
 
 
@@ -290,3 +338,83 @@ function newlineToBr(string){
 	var replace = "<br><br>";
 	return string.replace(regex,replace);
 }
+
+function scrollArticle(pos){
+	$(articleDiv).stop().animate({scrollTop: $(articleDiv).scrollTop() + pos}, 300);
+}
+
+function focusArticle(bool){
+	if(bool){
+		$(articleDiv).css({
+			background: '#ccc',
+		})
+	} else {
+		$(articleDiv).css({
+			background: '#ddd',
+		})
+	}
+}
+
+
+//keypress handlers;
+/* 37 = left
+ * 38 = up
+ * 39 = right
+ * 40 = down;
+ */
+
+$(document).keydown(function(e){
+	//down
+	if(e.keyCode == 40){
+		e.preventDefault();
+		switch(mode){
+			case 'list':
+				nextArticle();
+				break;
+			case 'search':
+				mode = 'list';
+				$(searchBox).blur();
+				break;
+			case 'article':
+				scrollArticle($(articleDiv).height()/1.5);
+				break;
+		}
+	}
+
+	//up
+	if(e.keyCode == 38){
+		e.preventDefault();
+		switch(mode){
+			case 'list':
+				previousArticle();
+				break;
+			case 'article':
+				scrollArticle(-$(articleDiv).height()/1.5);
+				break;
+		}
+	}
+
+	//right
+	if(e.keyCode == 39){
+		e.preventDefault();
+		switch(mode){
+			case 'list':
+				mode = 'article';
+				focusArticle(true);
+				break;
+			case 'search':
+				mode = 'article';
+				break;
+		}
+	}
+
+	if(e.keyCode == 37){
+		e.preventDefault();
+		switch(mode){
+			case 'article':
+				focusArticle(false);
+				mode = 'list';
+				break;
+		}
+	}
+})
