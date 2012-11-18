@@ -6,6 +6,7 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
+var radialMenuDiv;
 var articleTitle;
 var articleBody;
 var articleArray = [];
@@ -15,6 +16,9 @@ var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
 var articleIndex;
 var mode = 'list';
 var scrollFactor = 10;
+var selectedArticle;
+var buttonPressed;
+
 
 //sets out basic layout
 function init(){
@@ -130,19 +134,84 @@ function init(){
 	$(articleDiv).append(articleTitle);
 	$(articleDiv).append(articleBody);
 
+	radialMenuDiv = document.createElement('div');
+	$(radialMenuDiv).addClass('radialMenuDive');
+	$(radialMenuDiv).css({
+		position: 'absolute',
+		right: '0%',
+		bottom: '0%',
+		height: '100%',
+		width: '70%',
+		background: 'rgba(0,0,0,0.5)',
+	});
+	root.append(radialMenuDiv);
+	$(radialMenuDiv).hide();
+
 	optionsDiv = document.createElement('div');
 	$(optionsDiv).addClass('optionsDiv');
 	$(optionsDiv).css({
 		position: 'absolute',
+		'text-align': 'right',
 		right: '0%',
 		bottom: '0%',
 		height: '6%',
 		width: '70%',
+		display: 'table-cell',
+		'vertical-align': 'middle',
 		background: 'rgba(0,0,0,.6)',
 	})
+	
+	//Button
+	$(optionsDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	
+	//ShareSpan
+	shareSpan = document.createElement('span');
+	$(shareSpan).addClass("optionSpan");
+	$(shareSpan).text('Share');
+	$(optionsDiv).append(shareSpan);
+	
+	//Button
+	$(optionsDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	
+	//ViewSpan
+	viewSpan = document.createElement('span');
+	$(viewSpan).addClass("optionSpan");
+	$(viewSpan).text('View');
+	$(optionsDiv).append(viewSpan);
+
+	//Button
+	$(optionsDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	
+	//FlagSpan
+	flagSpan = document.createElement('span');
+	$(flagSpan).addClass("optionSpan");
+	$(flagSpan).text('Flag');
+	$(optionsDiv).append(flagSpan);
+	
+	//Button
+	$(optionsDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	
+	//SearchSpan
+	searchSpan = document.createElement('span');
+	$(searchSpan).addClass("optionSpan");
+	$(searchSpan).text('Search');
+	$(optionsDiv).append(searchSpan);
+
 	root.append(optionsDiv);
 
+	$(".optionSpan").css({
+		width: '200px',
+	});
+
+	$(".optButton").css({
+		'vertical-align': 'middle',
+		
+	});
+
 	getArticleList();
+
+	buttonPressed = 0;
+	document.onkeydown = keyStroke;
 }
 
 //fetches xml
@@ -287,6 +356,33 @@ function filterArticleElements(text){
 	}
 }
 
+function radialMenu(key){
+//String.fromCharCode(e.keyCode)
+	$(radialMenuDiv).hide(600, function() {
+		$(radialMenuDiv).empty();
+		var image;
+		switch(key){
+			case 65: //share, a
+				image = 'RBShare.png';
+				break;
+			case 83: //Flag, s
+				image = 'RBFlag.png';
+				break;
+			case 68: //View, d
+				//radialKeyStroke(key, func1, func2, func3, func4);
+				image = 'RBView.png';
+				break;
+			case 170: //Search, f
+				//focus on search and allow keyboard to show up
+				break;	
+		}
+		
+		$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="Logo" />');
+		$(radialMenuDiv).show(600);
+	});
+
+};
+
 //shows title, text, media
 function setDisplayedArticle(data){
 	$(articleTitle).text(data.title);
@@ -360,61 +456,108 @@ function focusArticle(bool){
 /* 37 = left
  * 38 = up
  * 39 = right
- * 40 = down;
+ * 40 = down
+ * 65 = a
+ * 83 = s
+ * 68 = d
+ * 170 = f
+ * ;
  */
+function keyStroke(ev) {
+	key = ((ev.which)||(ev.keyCode));
+	if (buttonPressed !== 0) {
+		switch(buttonPressed){
+			case 65: //Share - a
+				//radialKeyStroke(key, func1, func2, func3, func4);
+				break;
+			case 83: //Flag - s
+				radialKeyStroke(key, markRead, star, markUnread, unstar);
+				break;
+			case 68: //View - d
+				//radialKeyStroke(key, func1, func2, func3, func4);
+				break;
+			case 170: //Search - f
+				//focus on search and allow keyboard to show up
+				break;	
+		}	
 
-$(document).keydown(function(e){
-	//down
-	if(e.keyCode == 40){
-		e.preventDefault();
-		switch(mode){
-			case 'list':
-				nextArticle();
+		buttonPressed = 0;
+		$(radialMenuDiv).hide(600);
+	}
+	else if (buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
+		radialMenu(key);
+		buttonPressed = key;
+	} else {
+		switch(key){
+			//down
+			case 40: 
+				e.preventDefault();
+				switch(mode){
+					case 'list':
+						nextArticle();
+						break;
+					case 'search':
+						mode = 'list';
+						$(searchBox).blur();
+						break;
+					case 'article':
+						scrollArticle($(articleDiv).height()/1.5);
+						break;
+				}
 				break;
-			case 'search':
-				mode = 'list';
-				$(searchBox).blur();
+			//up
+			case 38:
+				e.preventDefault();
+				switch(mode){
+					case 'list':
+						previousArticle();
+						break;
+					case 'article':
+						scrollArticle(-$(articleDiv).height()/1.5);
+						break;
+				}
 				break;
-			case 'article':
-				scrollArticle($(articleDiv).height()/1.5);
+			//right
+			case 39:
+				e.preventDefault();
+				switch(mode){
+					case 'list':
+						mode = 'article';
+						focusArticle(true);
+						break;
+					case 'search':
+						mode = 'article';
+						break;
+				}
 				break;
+			//left
+			case 37:
+				e.preventDefault();
+				switch(mode){
+					case 'article':
+						focusArticle(false);
+						mode = 'list';
+						break;
+				}
+			break;
 		}
 	}
+}
 
-	//up
-	if(e.keyCode == 38){
-		e.preventDefault();
-		switch(mode){
-			case 'list':
-				previousArticle();
-				break;
-			case 'article':
-				scrollArticle(-$(articleDiv).height()/1.5);
-				break;
-		}
+function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
+	switch(key){
+		case 37: //left
+			funcLeft();
+			break;
+		case 38: //up
+			funcUp();
+			break;
+		case 39: //right
+			funcRight();
+			break;
+		case 40: //down
+			funcDown();
+			break;
 	}
+}
 
-	//right
-	if(e.keyCode == 39){
-		e.preventDefault();
-		switch(mode){
-			case 'list':
-				mode = 'article';
-				focusArticle(true);
-				break;
-			case 'search':
-				mode = 'article';
-				break;
-		}
-	}
-
-	if(e.keyCode == 37){
-		e.preventDefault();
-		switch(mode){
-			case 'article':
-				focusArticle(false);
-				mode = 'list';
-				break;
-		}
-	}
-})
