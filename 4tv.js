@@ -236,54 +236,98 @@ function init(){
 		background: 'rgba(0,0,0,.6)',
 	})
 	
+	//ShareSpanDiv
+	shareSpanDiv = document.createElement('div');
+	$(shareSpanDiv).addClass("optionSpanDiv");
+
 	//Button
-	$(optionsDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton"/>');
-	
+	$(shareSpanDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton"/>');
+
 	//ShareSpan
 	shareSpan = document.createElement('span');
 	$(shareSpan).addClass("optionSpan");
 	$(shareSpan).text('Share');
-	$(optionsDiv).append(shareSpan);
+	$(shareSpanDiv).append(shareSpan);
+	
+	$(optionsDiv).append(shareSpanDiv);
+
+	//ViewSpanDiv
+	viewSpanDiv = document.createElement('div');
+	$(viewSpanDiv).addClass("optionSpanDiv");
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton"/>');
+	$(viewSpanDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton"/>');
 	
 	//ViewSpan
 	viewSpan = document.createElement('span');
 	$(viewSpan).addClass("optionSpan");
 	$(viewSpan).text('View');
-	$(optionsDiv).append(viewSpan);
+	$(viewSpanDiv).append(viewSpan);
 
+	$(optionsDiv).append(viewSpanDiv);
+	
+	//FlagSpanDiv
+	flagSpanDiv = document.createElement('div');
+	$(flagSpanDiv).addClass("optionSpanDiv");
+	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton"/>');
+	$(flagSpanDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton"/>');
 	
 	//FlagSpan
 	flagSpan = document.createElement('span');
 	$(flagSpan).addClass("optionSpan");
 	$(flagSpan).text('Flag');
-	$(optionsDiv).append(flagSpan);
+	$(flagSpanDiv).append(flagSpan);
+	
+	$(optionsDiv).append(flagSpanDiv);
+	
+	//FlagSpanDiv
+	searchSpanDiv = document.createElement('div');
+	$(searchSpanDiv).addClass("optionSpanDiv");
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton"/>');
+	$(searchSpanDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton"/>');
 	
 	//SearchSpan
 	searchSpan = document.createElement('span');
 	$(searchSpan).addClass("optionSpan");
 	$(searchSpan).text('Search');
-	$(optionsDiv).append(searchSpan);
+	$(searchSpanDiv).append(searchSpan);
+	
+	$(optionsDiv).append(searchSpanDiv);
 
 	root.append(optionsDiv);
 
+	$(".optionSpanDiv").css({
+		float: 'right',
+		display: 'table-cell',
+		'font-size': '200%', 
+		width: '15%',
+		'vertical-align': 'middle',
+	});
+
+
 	$(".optionSpan").css({
-		'font-size': '200%',
+		display: 'inline-block',
+		'vertical-align': 'middle',
 	});
 
 	$(".optButton").css({
+		display: 'inline-block',
 		'vertical-align': 'middle',
 		height: '98%',
 	});
 
 	getArticleList();
+
+	scrollBarWidth = 0.015 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
+	for(var i = 0; i < document.styleSheets.length; i ++) {
+		var cursheet = document.styleSheets[i];
+		if(cursheet.title == '4tvStyle') {
+			cursheet.addRule("::-webkit-scrollbar", "width: " + scrollBarWidth + "px" );
+			console.log(scrollBarWidth);
+		}
+	} 
 
 	buttonPressed = 0;
 	document.onkeydown = keyStroke;
@@ -471,7 +515,7 @@ function radialMenu(key){
 		}
 		
 		$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="Logo" />');
-		$(radialMenuDiv).show(600);
+		$(radialMenuDiv).fadeIn(400);
 	});
 
 };
@@ -586,7 +630,7 @@ function keyStroke(ev) {
 		}	
 
 		buttonPressed = 0;
-		$(radialMenuDiv).hide(600);
+		$(radialMenuDiv).fadeOut(400);
 	}
 	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
 		radialMenu(key);
