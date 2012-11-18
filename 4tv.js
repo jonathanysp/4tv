@@ -21,7 +21,7 @@ var settingsCogDiv;
 var settingsCog;
 var settingsDiv;
 var settingsArray = [];
-
+var settingIndex = 0;
 
 //sets out basic layout
 function init(){
@@ -63,13 +63,14 @@ function init(){
 
 	//settingsDiv
 	settingsDiv = document.createElement('div');
+	$(settingsDiv).addClass("settingsDiv");
 	$(settingsDiv).css({
 		position: 'absolute',
 		right: '0%',
 		top: '0%',
 		height: '94%',
 		width: '66%',
-		padding: '0% 2%',
+		padding: '2% 2%',
 		background: '#eee',
 		'overflow-y': 'auto',
 		'z-index': 10,
@@ -77,8 +78,43 @@ function init(){
 	})
 	root.append(settingsDiv);
 
+	//settings (should make dynamic for later TODO)
+	var switchUserDiv = document.createElement('div');
+	$(switchUserDiv).addClass("switchUserDiv");
+	$(switchUserDiv).addClass("setting");
+	$(switchUserDiv).css({
+		width: '100%',
+		height: "10%",
+		border: '1px solid black',
+		background: "#888",
+		'margin-bottom': '2%',
+	})
+	$(switchUserDiv).data("enter", function(){
+		//SWITCH USER;
+	})
+	$(switchUserDiv).text("Switch User");
+
+	var quitDiv = document.createElement('div');
+	$(quitDiv).addClass('quitDiv');
+	$(quitDiv).addClass("setting");
+	$(quitDiv).css({
+		width: '100%',
+		height: "10%",
+		border: '1px solid black'
+	})
+	$(quitDiv).text("Quit");
+	$(quitDiv).data("enter", function(){
+		window.close();
+	})
+
+	settingsArray.push(switchUserDiv);
+	settingsArray.push(quitDiv);
+	$(settingsDiv).append(switchUserDiv);
+	$(settingsDiv).append(quitDiv);
+
 	searchBox = document.createElement('input');
 	searchBox.placeholder = "Search";
+	searchBox.disabled = true;
 	$(searchBox).css({
 		width: '100%',
 		height: '100%',
@@ -92,15 +128,16 @@ function init(){
 	$(searchBox).focus(function(){
 		$(searchBox).css({
 			'border-color': '#6EA2DE',
-			'box-shadow': '0px 0px 20px #6EA2DE'
+			'box-shadow': '0px 0px 20px #6EA2DE',
 		})
+		searchBox.disabled = false;
 	}).blur(function(){
 		$(searchBox).css({
 			'border-color': 'black',
-			'box-shadow': '0px 0px 0px #6EA2DE'
+			'box-shadow': '0px 0px 0px #6EA2DE',
 		})
+		searchBox.disabled = true;
 	})
-
 
 	searchDiv = document.createElement('div');
 	$(searchDiv).addClass("searchDiv");
@@ -297,7 +334,7 @@ function selectArticle(index){
 	$(articleArray[index]).css({
 		background:'#888',
 	})
-	$(articleArray[index]).click();
+	getArticleDetails($(articleArray[index]).data('data').link);
 }
 
 function nextArticle(){
@@ -306,7 +343,6 @@ function nextArticle(){
 		//skips filtered articles
 		while($(articleArray[articleIndex]).data("display") === false && articleIndex < articleArray.length - 1){
 			articleIndex++;
-			console.log(articleIndex);
 		}
 		selectArticle(articleIndex);
 	}
@@ -339,6 +375,25 @@ function previousArticle(){
 			scrollTop: $(articleArray[scrollArticle]).position().top + $(listDiv).scrollTop(),
 		}, 500)
 	}
+}
+
+function nextSetting(){
+	if(settingIndex < settingsArray.length-1){
+		settingIndex++;
+	}
+	selectSetting();
+}
+
+function prevSetting(){
+	if(settingIndex > 0){
+		settingIndex--;
+	}
+	selectSetting()
+}
+
+function selectSetting(){
+	$('.setting').css('background', 'none');
+	$(settingsArray[settingIndex]).css('background', '#888');
 }
 
 //contains title, date, snippet
@@ -379,17 +434,6 @@ function makeArticleListElement(data){
 	})
 	$(elementSnippet).text(data.contentSnippet);
 	$(articleElement).append(elementSnippet)
-
-	//click function
-	$(articleElement).click(function(){
-		$('.articleElement').css({
-			background: '#ddd',
-		})
-		$(this).css({
-			background: '#888',
-		})
-		getArticleDetails($(this).data('data').link);
-	})
 
 	return articleElement;
 }
@@ -520,6 +564,7 @@ function settingsFocus(bool){
  * 83 = s
  * 68 = d
  * 170 = f
+ * 13 = enter
  * ;
  */
 function keyStroke(ev) {
@@ -562,10 +607,14 @@ function keyStroke(ev) {
 					case 'article':
 						scrollArticle($(articleDiv).height()/1.5);
 						break;
-					case 'settings':
+					case 'cog':
 						settingsFocus(false);
 						$(searchBox).focus();
 						mode = 'search';
+						break;
+					case 'settings':
+						nextSetting();
+						break;
 				}
 				break;
 			//up
@@ -581,7 +630,11 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
-						mode = 'settings';
+						mode = 'cog';
+						break;
+					case 'settings':
+						prevSetting();
+						break;
 				}
 				break;
 			//right
@@ -595,6 +648,10 @@ function keyStroke(ev) {
 					case 'search':
 						mode = 'article';
 						break;
+					case 'cog':
+						mode = 'settings';
+						$('.settingsDiv').css('background', '#ccc');
+						break;
 				}
 				break;
 			//left
@@ -604,6 +661,18 @@ function keyStroke(ev) {
 					case 'article':
 						focusArticle(false);
 						mode = 'list';
+						break;
+					case 'settings':
+						mode = 'cog';
+						$('.settingsDiv').css('background', '#ddd');
+						break;
+				}
+			//enter
+			case 13:
+				ev.preventDefault();
+				switch(mode){
+					case 'settings':
+						$(settingsArray[settingIndex]).data("enter")();
 						break;
 				}
 			break;
