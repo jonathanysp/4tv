@@ -13,7 +13,6 @@ var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
-var articleIndex;
 var mode = 'list';
 var scrollFactor = 10;
 var selectedArticle;
@@ -21,6 +20,7 @@ var buttonPressed;
 var settingsCogDiv;
 var settingsCog;
 var settingsDiv;
+var settingsArray = [];
 
 
 //sets out basic layout
