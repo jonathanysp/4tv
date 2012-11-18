@@ -198,7 +198,7 @@ function init(){
 	})
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	$(optionsDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton"/>');
 	
 	//ShareSpan
 	shareSpan = document.createElement('span');
@@ -207,7 +207,7 @@ function init(){
 	$(optionsDiv).append(shareSpan);
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	$(optionsDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton"/>');
 	
 	//ViewSpan
 	viewSpan = document.createElement('span');
@@ -216,7 +216,7 @@ function init(){
 	$(optionsDiv).append(viewSpan);
 
 	//Button
-	$(optionsDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	$(optionsDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton"/>');
 	
 	//FlagSpan
 	flagSpan = document.createElement('span');
@@ -225,7 +225,7 @@ function init(){
 	$(optionsDiv).append(flagSpan);
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton" height="75%" vertial-align="text-top"/>');
+	$(optionsDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton"/>');
 	
 	//SearchSpan
 	searchSpan = document.createElement('span');
@@ -529,7 +529,7 @@ function keyStroke(ev) {
 		buttonPressed = 0;
 		$(radialMenuDiv).hide(600);
 	}
-	else if (buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
 		radialMenu(key);
 		buttonPressed = key;
 	} else {
@@ -613,4 +613,3 @@ function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
 			break;
 	}
 }
-
