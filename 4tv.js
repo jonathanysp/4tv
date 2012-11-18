@@ -6,6 +6,8 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
+var logArr = [];
+var logIndex = 0;
 var radialMenuDiv;
 var articleTitle;
 var articleBody;
@@ -14,7 +16,7 @@ var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
 var articleIndex;
-var mode = 'list';
+var mode = 'login';
 var scrollFactor = 10;
 var selectedArticle;
 var buttonPressed;
@@ -23,6 +25,27 @@ var buttonPressed;
 //sets out basic layout
 function init(){
 	root = $(".root");
+	
+	loginDiv = document.createElement('div');
+	$(loginDiv).addClass("loginDiv");
+	$(loginDiv).css({
+	position: 'absolute',
+	top: '0%',
+	left: '0%',
+	height: '100%',
+	width: '100%',
+	'z-index': '100',
+	display: 'visible',
+	background: '#888',
+	})
+	
+	$(loginDiv).prepend('<img src="img/Logo.png" alt="Logo" height="30%"/>');
+	root.append(loginDiv);
+	
+	
+loginList("margi");
+loginList("jon");
+loginList("dan");
 	
 	topDiv = document.createElement('div');
 	$(topDiv).addClass("topDiv");
@@ -215,6 +238,79 @@ function init(){
 	document.onkeydown = keyStroke;
 }
 
+
+
+function loginList(data){
+//make a couple logins.
+var loginElement = document.createElement('div');
+$(loginElement).addClass('loginElement');
+//$(loginElement.attr('id', data);
+$(loginElement).css({
+position: 'relative',
+	top: '10%',
+	left: '45%',
+	'-moz-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'-webkit-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'background-color': '#f0c911',
+	'-moz-border-radius': '21px',
+	'-webkit-border-radius': '21px',
+	'border-radius': '21px',
+	'border':  '3px solid #e65f44',
+	'display': 'block',
+	'color': '#c92200',
+	'font-family': 'arial',
+	'font-size': '28px',
+	'font-weight': 'bold',
+	'padding':'22px 29px',
+	'text-decoration':'none',
+	'text-shadow':'1px 1px 0px #ded17c',
+})
+
+$(loginDiv).append(loginElement);
+$(loginElement).outerWidth($(loginDiv).outerWidth()/7);
+//$(loginElement).outerHeight($(loginDiv).outerHeight()/8);
+
+var logTitle = document.createElement('div');
+$(logTitle).addClass('logTitle');
+$(logTitle).css({
+position: 'absolute',
+left: '0%',
+top: '0%',
+height: '100%',
+		width: '100%',
+		'font-size': '120%',
+		'font-Weight': 'Bold',
+		'text-align': 'center',
+		})
+
+$(logTitle).text(data);
+$(loginElement).append(logTitle);
+
+
+	//click func
+	$(loginElement).click(function(){
+		$('.loginElement').css({
+			background: '#ddd',
+		})
+		$(this).css({
+			background: '#888',
+		})
+		$(loginDiv).css({
+			display: 'none',
+		})
+	})
+logArr.push(loginElement);
+
+	return loginElement;
+
+
+}
+
+
+
+
+
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
@@ -262,7 +358,18 @@ function selectArticle(index){
 	})
 	$(articleArray[index]).click();
 }
+function nextLogin(){
+if(logIndex <logArr.length-1){
+logIndex++;
+selectLogin(logIndex);
+}
+}
 
+function selectLogin(logIndex){
+$(logArr[logIndex]).css({
+	background: '#ddd',
+	})
+}
 function nextArticle(){
 	if(articleIndex < articleArray.length - 1){
 		articleIndex++;
@@ -494,6 +601,8 @@ function keyStroke(ev) {
 			case 40: 
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						nextLogin();
 					case 'list':
 						nextArticle();
 						break;
@@ -522,6 +631,8 @@ function keyStroke(ev) {
 			case 39:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						mode = 'search';
 					case 'list':
 						mode = 'article';
 						focusArticle(true);
