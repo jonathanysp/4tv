@@ -18,8 +18,9 @@ var mode = 'list';
 var scrollFactor = 10;
 var selectedArticle;
 var buttonPressed;
-var settingsCogDiv
-var settingsCog
+var settingsCogDiv;
+var settingsCog;
+var settingsDiv;
 
 
 //sets out basic layout
@@ -38,21 +39,6 @@ function init(){
 	})
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
-
-	//Article
-	/*
-	sectionSpan = document.createElement('span');
-	$(sectionSpan).addClass("sectionSpan");
-	$(sectionSpan).css({
-		position: 'absolute',
-		top: '15%',
-		left: '82%',
-		height: '100%',
-		'font-size': '1.5em',
-		'text-align': 'right',
-	})
-	$(sectionSpan).text('Articles');
-	$(topDiv).append(sectionSpan);*/
 
 	//Settings Cog
 	settingsCogDiv = document.createElement('div');
@@ -74,6 +60,22 @@ function init(){
 	$(topDiv).append(settingsCogDiv);
 
 	root.append(topDiv);
+
+	//settingsDiv
+	settingsDiv = document.createElement('div');
+	$(settingsDiv).css({
+		position: 'absolute',
+		right: '0%',
+		top: '0%',
+		height: '94%',
+		width: '66%',
+		padding: '0% 2%',
+		background: '#eee',
+		'overflow-y': 'auto',
+		'z-index': 10,
+		'display': 'none',
+	})
+	root.append(settingsDiv);
 
 	searchBox = document.createElement('input');
 	searchBox.placeholder = "Search";
@@ -236,12 +238,12 @@ function init(){
 	root.append(optionsDiv);
 
 	$(".optionSpan").css({
-		width: '200px',
+		'font-size': '200%',
 	});
 
 	$(".optButton").css({
 		'vertical-align': 'middle',
-		
+		height: '98%',
 	});
 
 	getArticleList();
@@ -301,6 +303,11 @@ function selectArticle(index){
 function nextArticle(){
 	if(articleIndex < articleArray.length - 1){
 		articleIndex++;
+		//skips filtered articles
+		while($(articleArray[articleIndex]).data("display") === false && articleIndex < articleArray.length - 1){
+			articleIndex++;
+			console.log(articleIndex);
+		}
 		selectArticle(articleIndex);
 	}
 	if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
@@ -317,6 +324,10 @@ function previousArticle(){
 		$(searchBox).focus();		
 	} else {
 		articleIndex--;
+		//skips filtered articles
+		while($(articleArray[articleIndex]).data("display") === false && articleIndex > 0){
+			articleIndex--;
+		}
 		selectArticle(articleIndex);
 	}
 	if($(articleArray[articleIndex]).position().top < 0){
@@ -334,6 +345,7 @@ function previousArticle(){
 function makeArticleListElement(data){
 	var articleElement = document.createElement('div');
 	$(articleElement).data('data', data);
+	$(articleElement).data('display', true);
 	$(articleElement).addClass('articleElement');
 	$(articleElement).attr('id', data.title);
 	$(articleElement).css({
@@ -386,10 +398,10 @@ function makeArticleListElement(data){
 //searches and filters through list, quite buggy, case sensitive right now
 function filterArticleElements(text){
   	if(text){
-		$('.articleElement').children(":not(:contains("+text+"))").parent().slideUp();
-		$('.articleElement').children(":contains("+text+")").parent().slideDown()
+		$('.articleElement').children(":not(:contains("+text+"))").parent().stop().slideUp(300).data("display", false);
+		$('.articleElement').children(":contains("+text+")").parent().stop().slideDown(300).data("display", true);
 	} else {
-		$('.articleElement').slideDown();
+		$('.articleElement').slideDown(300).data("display", true);
 	}
 }
 
@@ -491,8 +503,10 @@ function focusArticle(bool){
 function settingsFocus(bool){
 	if (bool){
 		settingsCog.src = 'img/cog2.svg';
+		$(settingsDiv).fadeIn();
 	} else {
 		settingsCog.src = 'img/cog.svg';
+		$(settingsDiv).fadeOut();
 	}
 }
 
