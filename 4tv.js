@@ -18,6 +18,8 @@ var mode = 'list';
 var scrollFactor = 10;
 var selectedArticle;
 var buttonPressed;
+var settingsCogDiv
+var settingsCog
 
 
 //sets out basic layout
@@ -38,6 +40,7 @@ function init(){
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
 
 	//Article
+	/*
 	sectionSpan = document.createElement('span');
 	$(sectionSpan).addClass("sectionSpan");
 	$(sectionSpan).css({
@@ -49,7 +52,27 @@ function init(){
 		'text-align': 'right',
 	})
 	$(sectionSpan).text('Articles');
-	$(topDiv).append(sectionSpan);
+	$(topDiv).append(sectionSpan);*/
+
+	//Settings Cog
+	settingsCogDiv = document.createElement('div');
+	$(settingsCogDiv).addClass("settingsCogDiv");
+	$(settingsCogDiv).css({
+		position: 'absolute',
+		right: '0',
+		top: '0',
+	})
+	
+	settingsCog = document.createElement('img');
+	settingsCog.src = 'img/cog.svg';
+	$(settingsCog).css({
+		'max-height': '100%',
+		'max-width': '100%',
+	})
+
+	$(settingsCogDiv).append(settingsCog);
+	$(topDiv).append(settingsCogDiv);
+
 	root.append(topDiv);
 
 	searchBox = document.createElement('input');
@@ -58,11 +81,24 @@ function init(){
 		width: '100%',
 		height: '100%',
 		'font-size': '150%',
+		'border-color': 'black',
 	})
 	$(searchBox).change(filterArticleElements($(searchBox).val()))
 	$(searchBox).keyup(function(){
 		filterArticleElements($(searchBox).val())
 	});
+	$(searchBox).focus(function(){
+		$(searchBox).css({
+			'border-color': '#6EA2DE',
+			'box-shadow': '0px 0px 20px #6EA2DE'
+		})
+	}).blur(function(){
+		$(searchBox).css({
+			'border-color': 'black',
+			'box-shadow': '0px 0px 0px #6EA2DE'
+		})
+	})
+
 
 	searchDiv = document.createElement('div');
 	$(searchDiv).addClass("searchDiv");
@@ -314,8 +350,9 @@ function makeArticleListElement(data){
 	$(elementTitle).css({
 		height: '40%',
 		width: '100%',
-		'font-size': '120%',
+		'font-size': '140%',
 		'font-Weight': 'Bold',
+		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
 	$(articleElement).append(elementTitle)
@@ -325,7 +362,7 @@ function makeArticleListElement(data){
 	$(elementSnippet).css({
 		height: '50%',
 		width: '100%',
-		'font-size': '100%',
+		'font-size': '120%',
 		'color': '#444',
 	})
 	$(elementSnippet).text(data.contentSnippet);
@@ -451,6 +488,14 @@ function focusArticle(bool){
 	}
 }
 
+function settingsFocus(bool){
+	if (bool){
+		settingsCog.src = 'img/cog2.svg';
+	} else {
+		settingsCog.src = 'img/cog.svg';
+	}
+}
+
 
 //keypress handlers;
 /* 37 = left
@@ -491,7 +536,7 @@ function keyStroke(ev) {
 		switch(key){
 			//down
 			case 40: 
-				e.preventDefault();
+				ev.preventDefault();
 				switch(mode){
 					case 'list':
 						nextArticle();
@@ -503,11 +548,15 @@ function keyStroke(ev) {
 					case 'article':
 						scrollArticle($(articleDiv).height()/1.5);
 						break;
+					case 'settings':
+						settingsFocus(false);
+						$(searchBox).focus();
+						mode = 'search';
 				}
 				break;
 			//up
 			case 38:
-				e.preventDefault();
+				ev.preventDefault();
 				switch(mode){
 					case 'list':
 						previousArticle();
@@ -515,11 +564,15 @@ function keyStroke(ev) {
 					case 'article':
 						scrollArticle(-$(articleDiv).height()/1.5);
 						break;
+					case 'search':
+						$(searchBox).blur();
+						settingsFocus(true);
+						mode = 'settings';
 				}
 				break;
 			//right
 			case 39:
-				e.preventDefault();
+				ev.preventDefault();
 				switch(mode){
 					case 'list':
 						mode = 'article';
@@ -532,7 +585,7 @@ function keyStroke(ev) {
 				break;
 			//left
 			case 37:
-				e.preventDefault();
+				ev.preventDefault();
 				switch(mode){
 					case 'article':
 						focusArticle(false);
