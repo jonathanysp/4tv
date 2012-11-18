@@ -213,6 +213,8 @@ function init(){
 	$(radialMenuDiv).addClass('radialMenuDive');
 	$(radialMenuDiv).css({
 		position: 'absolute',
+		display: 'table',
+		'text-align': 'center',
 		right: '0%',
 		bottom: '0%',
 		height: '100%',
@@ -249,7 +251,6 @@ function init(){
 	$(shareSpan).text('Share');
 	$(shareSpanDiv).append(shareSpan);
 	
-	$(optionsDiv).append(shareSpanDiv);
 
 	//ViewSpanDiv
 	viewSpanDiv = document.createElement('div');
@@ -264,8 +265,6 @@ function init(){
 	$(viewSpan).text('View');
 	$(viewSpanDiv).append(viewSpan);
 
-	$(optionsDiv).append(viewSpanDiv);
-	
 	//FlagSpanDiv
 	flagSpanDiv = document.createElement('div');
 	$(flagSpanDiv).addClass("optionSpanDiv");
@@ -278,8 +277,6 @@ function init(){
 	$(flagSpan).addClass("optionSpan");
 	$(flagSpan).text('Flag');
 	$(flagSpanDiv).append(flagSpan);
-	
-	$(optionsDiv).append(flagSpanDiv);
 	
 	//FlagSpanDiv
 	searchSpanDiv = document.createElement('div');
@@ -295,13 +292,18 @@ function init(){
 	$(searchSpanDiv).append(searchSpan);
 	
 	$(optionsDiv).append(searchSpanDiv);
+	$(optionsDiv).append(flagSpanDiv);
+	$(optionsDiv).append(viewSpanDiv);
+	$(optionsDiv).append(shareSpanDiv);
 
 	root.append(optionsDiv);
 
+	//CSS of optionDiv
 	$(".optionSpanDiv").css({
 		float: 'right',
 		display: 'table-cell',
-		'font-size': '200%', 
+		'font-size': '200%',
+		'text-align': 'left',
 		width: '15%',
 		'vertical-align': 'middle',
 	});
@@ -315,7 +317,9 @@ function init(){
 	$(".optButton").css({
 		display: 'inline-block',
 		'vertical-align': 'middle',
-		height: '98%',
+		height: '92%',
+		position: 'relative',
+		top: ($(optionsDiv).outerHeight()*0.10)+'px',
 	});
 
 	getArticleList();
@@ -325,7 +329,6 @@ function init(){
 		var cursheet = document.styleSheets[i];
 		if(cursheet.title == '4tvStyle') {
 			cursheet.addRule("::-webkit-scrollbar", "width: " + scrollBarWidth + "px" );
-			console.log(scrollBarWidth);
 		}
 	} 
 
@@ -495,7 +498,7 @@ function filterArticleElements(text){
 
 function radialMenu(key){
 //String.fromCharCode(e.keyCode)
-	$(radialMenuDiv).hide(600, function() {
+	$(radialMenuDiv).fadeOut(600, function() {
 		$(radialMenuDiv).empty();
 		var image;
 		switch(key){
@@ -509,13 +512,28 @@ function radialMenu(key){
 				//radialKeyStroke(key, func1, func2, func3, func4);
 				image = 'RBView.png';
 				break;
-			case 170: //Search, f
+			case 70: //Search, f
 				//focus on search and allow keyboard to show up
 				break;	
 		}
-		
-		$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="Logo" />');
-		$(radialMenuDiv).fadeIn(400);
+
+		if (key !== 70) {	
+			$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="radialMenu" class="radialMenuImg" />');
+			$(radialMenuDiv).fadeIn(400);
+
+			topPadding = Math.abs(($(radialMenuDiv).height() - 548)/2); //548 is the height of the radialMenuImg
+
+			//CSS of radialMenu Images	
+			$(".radialMenuImg").css({
+				position: 'relative',
+				top: topPadding+'px',
+				'text-align': 'center',
+			});
+
+		} else {
+			$(searchBox).focus();
+			mode = 'search';
+		}
 	});
 
 };
@@ -607,7 +625,7 @@ function settingsFocus(bool){
  * 65 = a
  * 83 = s
  * 68 = d
- * 170 = f
+ * 70 = f
  * 13 = enter
  * ;
  */
@@ -624,7 +642,7 @@ function keyStroke(ev) {
 			case 68: //View - d
 				//radialKeyStroke(key, func1, func2, func3, func4);
 				break;
-			case 170: //Search - f
+			case 70: //Search - f
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
@@ -632,7 +650,7 @@ function keyStroke(ev) {
 		buttonPressed = 0;
 		$(radialMenuDiv).fadeOut(400);
 	}
-	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 70)){ 
 		radialMenu(key);
 		buttonPressed = key;
 	} else {
