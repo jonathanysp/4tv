@@ -6,6 +6,8 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
+var logArr = [];
+var logIndex = 0;
 var radialMenuDiv;
 var articleTitle;
 var articleBody;
@@ -13,7 +15,9 @@ var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
-var mode = 'list';
+
+var articleIndex;
+var mode = 'login';
 var scrollFactor = 10;
 var selectedArticle;
 var buttonPressed;
@@ -27,6 +31,30 @@ var settingIndex = 0;
 function init(){
 	root = $(".root");
 	
+	loginDiv = document.createElement('div');
+	$(loginDiv).addClass("loginDiv");
+	$(loginDiv).css({
+	position: 'absolute',
+	top: '0%',
+	left: '0%',
+	height: '100%',
+	width: '100%',
+	'z-index': '100',
+	display: 'visible',
+	background: '#888',
+	})
+	
+	$(loginDiv).prepend('<img src="img/Logo.png" alt="Logo" height="30%"/>');
+	root.append(loginDiv);
+	
+	
+loginList("margi");
+loginList("jon");
+loginList("dan");
+loginList("Guest");
+//must have at least 1 login.
+selectLogin(0);
+
 	topDiv = document.createElement('div');
 	$(topDiv).addClass("topDiv");
 	$(topDiv).css({
@@ -90,7 +118,10 @@ function init(){
 		'margin-bottom': '2%',
 	})
 	$(switchUserDiv).data("enter", function(){
-		//SWITCH USER;
+		
+		$(loginDiv).fadeIn("slow");
+		logIndex = 0;
+		
 	})
 	$(switchUserDiv).text("Switch User");
 
@@ -336,6 +367,79 @@ function init(){
 	document.onkeydown = keyStroke;
 }
 
+
+
+function loginList(data){
+//make a couple logins.
+var loginElement = document.createElement('div');
+$(loginElement).addClass('loginElement');
+//$(loginElement.attr('id', data);
+$(loginElement).css({
+position: 'relative',
+	top: '10%',
+	left: '45%',
+	'-moz-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'-webkit-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+	'background-color': '#f0c911',
+	'-moz-border-radius': '21px',
+	'-webkit-border-radius': '21px',
+	'border-radius': '21px',
+	'border':  '3px solid #e65f44',
+	'display': 'block',
+	'color': '#c92200',
+	'font-family': 'arial',
+	'font-size': '28px',
+	'font-weight': 'bold',
+	'padding':'22px 29px',
+	'text-decoration':'none',
+	'text-shadow':'1px 1px 0px #ded17c',
+})
+
+$(loginDiv).append(loginElement);
+$(loginElement).outerWidth($(loginDiv).outerWidth()/7);
+//$(loginElement).outerHeight($(loginDiv).outerHeight()/8);
+
+var logTitle = document.createElement('div');
+$(logTitle).addClass('logTitle');
+$(logTitle).css({
+position: 'absolute',
+left: '0%',
+top: '0%',
+height: '100%',
+		width: '100%',
+		'font-size': '120%',
+		'font-Weight': 'Bold',
+		'text-align': 'center',
+		})
+
+$(logTitle).text(data);
+$(loginElement).append(logTitle);
+
+
+	//click func
+	$(loginElement).click(function(){
+		$('.loginElement').css({
+			background: '#ddd',
+		})
+		$(this).css({
+			background: '#888',
+		})
+		$(loginDiv).css({
+			display: 'none',
+		})
+	})
+logArr.push(loginElement);
+
+	return loginElement;
+
+
+}
+
+
+
+
+
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
@@ -375,6 +479,7 @@ function addToList(array){
 }
 
 function selectArticle(index){
+
 	$('.articleElement').css({
 		background: '#ddd',
 	})
@@ -384,6 +489,40 @@ function selectArticle(index){
 	getArticleDetails($(articleArray[index]).data('data').link);
 }
 
+
+
+function nextLogin(){
+if(logIndex <logArr.length-1){
+unselectLogin(logIndex);
+logIndex++;
+selectLogin(logIndex);
+}
+}
+
+function previousLogin(){
+if(logIndex > 0){
+unselectLogin(logIndex);
+logIndex--;
+selectLogin(logIndex);
+}
+
+}
+
+function selectLogin(logIndex){
+if(logIndex > -1){
+$(logArr[logIndex]).css({
+	'background-color': '#ddd',
+	})
+}
+}
+
+function unselectLogin(index){
+if(logIndex > -1){
+$(logArr[logIndex]).css({
+	'background-color': '#f0c911',
+	})
+}
+}
 function nextArticle(){
 	if(articleIndex < articleArray.length - 1){
 		articleIndex++;
@@ -659,6 +798,9 @@ function keyStroke(ev) {
 			case 40: 
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						nextLogin();
+						break;
 					case 'list':
 						nextArticle();
 						break;
@@ -683,6 +825,9 @@ function keyStroke(ev) {
 			case 38:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						previousLogin();
+						break;
 					case 'list':
 						previousArticle();
 						break;
@@ -703,6 +848,8 @@ function keyStroke(ev) {
 			case 39:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						break;
 					case 'list':
 						mode = 'article';
 						focusArticle(true);
@@ -720,6 +867,8 @@ function keyStroke(ev) {
 			case 37:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						break;
 					case 'article':
 						focusArticle(false);
 						mode = 'list';
@@ -729,12 +878,22 @@ function keyStroke(ev) {
 						$('.settingsDiv').css('background', '#ddd');
 						break;
 				}
+			break;
 			//enter
 			case 13:
 				ev.preventDefault();
 				switch(mode){
 					case 'settings':
 						$(settingsArray[settingIndex]).data("enter")();
+						mode = 'login';
+						break;
+					case 'login':
+						console.log("adsf");
+						$(loginDiv).fadeOut("slow");	
+						unselectLogin(logIndex);
+						logIndex = 0;
+						selectLogin(logIndex);
+						mode = 'list';
 						break;
 				}
 			break;
