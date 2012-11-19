@@ -15,12 +15,17 @@ var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
+
 var articleIndex;
 var mode = 'login';
 var scrollFactor = 10;
 var selectedArticle;
 var buttonPressed;
-
+var settingsCogDiv;
+var settingsCog;
+var settingsDiv;
+var settingsArray = [];
+var settingIndex = 0;
 
 //sets out basic layout
 function init(){
@@ -46,7 +51,10 @@ function init(){
 loginList("margi");
 loginList("jon");
 loginList("dan");
-	
+loginList("Guest");
+//must have at least 1 login.
+selectLogin(0);
+
 	topDiv = document.createElement('div');
 	$(topDiv).addClass("topDiv");
 	$(topDiv).css({
@@ -60,32 +68,107 @@ loginList("dan");
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
 
-	//Article
-	sectionSpan = document.createElement('span');
-	$(sectionSpan).addClass("sectionSpan");
-	$(sectionSpan).css({
+	//Settings Cog
+	settingsCogDiv = document.createElement('div');
+	$(settingsCogDiv).addClass("settingsCogDiv");
+	$(settingsCogDiv).css({
 		position: 'absolute',
-		top: '15%',
-		left: '82%',
-		height: '100%',
-		'font-size': '1.5em',
-		'text-align': 'right',
+		right: '0',
+		top: '0',
 	})
-	$(sectionSpan).text('Articles');
-	$(topDiv).append(sectionSpan);
+	
+	settingsCog = document.createElement('img');
+	settingsCog.src = 'img/cog.svg';
+	$(settingsCog).css({
+		'max-height': '100%',
+		'max-width': '100%',
+	})
+
+	$(settingsCogDiv).append(settingsCog);
+	$(topDiv).append(settingsCogDiv);
+
 	root.append(topDiv);
+
+	//settingsDiv
+	settingsDiv = document.createElement('div');
+	$(settingsDiv).addClass("settingsDiv");
+	$(settingsDiv).css({
+		position: 'absolute',
+		right: '0%',
+		top: '0%',
+		height: '94%',
+		width: '66%',
+		padding: '2% 2%',
+		background: '#eee',
+		'overflow-y': 'auto',
+		'z-index': 10,
+		'display': 'none',
+	})
+	root.append(settingsDiv);
+
+	//settings (should make dynamic for later TODO)
+	var switchUserDiv = document.createElement('div');
+	$(switchUserDiv).addClass("switchUserDiv");
+	$(switchUserDiv).addClass("setting");
+	$(switchUserDiv).css({
+		width: '100%',
+		height: "10%",
+		border: '1px solid black',
+		background: "#888",
+		'margin-bottom': '2%',
+	})
+	$(switchUserDiv).data("enter", function(){
+		
+		$(loginDiv).fadeIn("slow");
+		logIndex = 0;
+		
+	})
+	$(switchUserDiv).text("Switch User");
+
+	var quitDiv = document.createElement('div');
+	$(quitDiv).addClass('quitDiv');
+	$(quitDiv).addClass("setting");
+	$(quitDiv).css({
+		width: '100%',
+		height: "10%",
+		border: '1px solid black'
+	})
+	$(quitDiv).text("Quit");
+	$(quitDiv).data("enter", function(){
+		window.close();
+	})
+
+	settingsArray.push(switchUserDiv);
+	settingsArray.push(quitDiv);
+	$(settingsDiv).append(switchUserDiv);
+	$(settingsDiv).append(quitDiv);
 
 	searchBox = document.createElement('input');
 	searchBox.placeholder = "Search";
+	searchBox.disabled = true;
 	$(searchBox).css({
 		width: '100%',
 		height: '100%',
 		'font-size': '150%',
+		'border-color': 'black',
 	})
 	$(searchBox).change(filterArticleElements($(searchBox).val()))
 	$(searchBox).keyup(function(){
 		filterArticleElements($(searchBox).val())
 	});
+	$(searchBox).focus(function(){
+		$(searchBox).css({
+			'border-color': '#6EA2DE',
+			'box-shadow': '0px 0px 20px #6EA2DE',
+		})
+		searchBox.disabled = false;
+	}).blur(function(){
+		$(searchBox).css({
+			'border-color': 'black',
+			'box-shadow': '0px 0px 0px #6EA2DE',
+		})
+		searchBox.disabled = true;
+	})
 
 	searchDiv = document.createElement('div');
 	$(searchDiv).addClass("searchDiv");
@@ -223,13 +306,12 @@ loginList("dan");
 	root.append(optionsDiv);
 
 	$(".optionSpan").css({
-		'font-size': '200%', 
-		width: '150%',
+		'font-size': '200%',
 	});
 
 	$(".optButton").css({
 		'vertical-align': 'middle',
-		height:'90%',
+		height: '98%',
 	});
 
 	getArticleList();
@@ -350,29 +432,57 @@ function addToList(array){
 }
 
 function selectArticle(index){
+
 	$('.articleElement').css({
 		background: '#ddd',
 	})
 	$(articleArray[index]).css({
 		background:'#888',
 	})
-	$(articleArray[index]).click();
+	getArticleDetails($(articleArray[index]).data('data').link);
 }
+
+
+
 function nextLogin(){
 if(logIndex <logArr.length-1){
+unselectLogin(logIndex);
 logIndex++;
 selectLogin(logIndex);
 }
 }
 
+function previousLogin(){
+if(logIndex > 0){
+unselectLogin(logIndex);
+logIndex--;
+selectLogin(logIndex);
+}
+
+}
+
 function selectLogin(logIndex){
+if(logIndex > -1){
 $(logArr[logIndex]).css({
-	background: '#ddd',
+	'background-color': '#ddd',
 	})
+}
+}
+
+function unselectLogin(index){
+if(logIndex > -1){
+$(logArr[logIndex]).css({
+	'background-color': '#f0c911',
+	})
+}
 }
 function nextArticle(){
 	if(articleIndex < articleArray.length - 1){
 		articleIndex++;
+		//skips filtered articles
+		while($(articleArray[articleIndex]).data("display") === false && articleIndex < articleArray.length - 1){
+			articleIndex++;
+		}
 		selectArticle(articleIndex);
 	}
 	if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
@@ -389,6 +499,10 @@ function previousArticle(){
 		$(searchBox).focus();		
 	} else {
 		articleIndex--;
+		//skips filtered articles
+		while($(articleArray[articleIndex]).data("display") === false && articleIndex > 0){
+			articleIndex--;
+		}
 		selectArticle(articleIndex);
 	}
 	if($(articleArray[articleIndex]).position().top < 0){
@@ -402,10 +516,30 @@ function previousArticle(){
 	}
 }
 
+function nextSetting(){
+	if(settingIndex < settingsArray.length-1){
+		settingIndex++;
+	}
+	selectSetting();
+}
+
+function prevSetting(){
+	if(settingIndex > 0){
+		settingIndex--;
+	}
+	selectSetting()
+}
+
+function selectSetting(){
+	$('.setting').css('background', 'none');
+	$(settingsArray[settingIndex]).css('background', '#888');
+}
+
 //contains title, date, snippet
 function makeArticleListElement(data){
 	var articleElement = document.createElement('div');
 	$(articleElement).data('data', data);
+	$(articleElement).data('display', true);
 	$(articleElement).addClass('articleElement');
 	$(articleElement).attr('id', data.title);
 	$(articleElement).css({
@@ -422,8 +556,9 @@ function makeArticleListElement(data){
 	$(elementTitle).css({
 		height: '40%',
 		width: '100%',
-		'font-size': '120%',
+		'font-size': '140%',
 		'font-Weight': 'Bold',
+		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
 	$(articleElement).append(elementTitle)
@@ -433,22 +568,11 @@ function makeArticleListElement(data){
 	$(elementSnippet).css({
 		height: '50%',
 		width: '100%',
-		'font-size': '100%',
+		'font-size': '120%',
 		'color': '#444',
 	})
 	$(elementSnippet).text(data.contentSnippet);
 	$(articleElement).append(elementSnippet)
-
-	//click function
-	$(articleElement).click(function(){
-		$('.articleElement').css({
-			background: '#ddd',
-		})
-		$(this).css({
-			background: '#888',
-		})
-		getArticleDetails($(this).data('data').link);
-	})
 
 	return articleElement;
 }
@@ -457,10 +581,10 @@ function makeArticleListElement(data){
 //searches and filters through list, quite buggy, case sensitive right now
 function filterArticleElements(text){
   	if(text){
-		$('.articleElement').children(":not(:contains("+text+"))").parent().slideUp();
-		$('.articleElement').children(":contains("+text+")").parent().slideDown()
+		$('.articleElement').children(":not(:contains("+text+"))").parent().stop().slideUp(300).data("display", false);
+		$('.articleElement').children(":contains("+text+")").parent().stop().slideDown(300).data("display", true);
 	} else {
-		$('.articleElement').slideDown();
+		$('.articleElement').slideDown(300).data("display", true);
 	}
 }
 
@@ -559,6 +683,16 @@ function focusArticle(bool){
 	}
 }
 
+function settingsFocus(bool){
+	if (bool){
+		settingsCog.src = 'img/cog2.svg';
+		$(settingsDiv).fadeIn();
+	} else {
+		settingsCog.src = 'img/cog.svg';
+		$(settingsDiv).fadeOut();
+	}
+}
+
 
 //keypress handlers;
 /* 37 = left
@@ -569,6 +703,7 @@ function focusArticle(bool){
  * 83 = s
  * 68 = d
  * 170 = f
+ * 13 = enter
  * ;
  */
 function keyStroke(ev) {
@@ -592,7 +727,7 @@ function keyStroke(ev) {
 		buttonPressed = 0;
 		$(radialMenuDiv).hide(600);
 	}
-	else if (mode!='search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
 		radialMenu(key);
 		buttonPressed = key;
 	} else {
@@ -603,6 +738,7 @@ function keyStroke(ev) {
 				switch(mode){
 					case 'login':
 						nextLogin();
+						break;
 					case 'list':
 						nextArticle();
 						break;
@@ -613,17 +749,36 @@ function keyStroke(ev) {
 					case 'article':
 						scrollArticle($(articleDiv).height()/1.5);
 						break;
+					case 'cog':
+						settingsFocus(false);
+						$(searchBox).focus();
+						mode = 'search';
+						break;
+					case 'settings':
+						nextSetting();
+						break;
 				}
 				break;
 			//up
 			case 38:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						previousLogin();
+						break;
 					case 'list':
 						previousArticle();
 						break;
 					case 'article':
 						scrollArticle(-$(articleDiv).height()/1.5);
+						break;
+					case 'search':
+						$(searchBox).blur();
+						settingsFocus(true);
+						mode = 'cog';
+						break;
+					case 'settings':
+						prevSetting();
 						break;
 				}
 				break;
@@ -632,7 +787,7 @@ function keyStroke(ev) {
 				ev.preventDefault();
 				switch(mode){
 					case 'login':
-						mode = 'search';
+						break;
 					case 'list':
 						mode = 'article';
 						focusArticle(true);
@@ -640,14 +795,42 @@ function keyStroke(ev) {
 					case 'search':
 						mode = 'article';
 						break;
+					case 'cog':
+						mode = 'settings';
+						$('.settingsDiv').css('background', '#ccc');
+						break;
 				}
 				break;
 			//left
 			case 37:
 				ev.preventDefault();
 				switch(mode){
+					case 'login':
+						break;
 					case 'article':
 						focusArticle(false);
+						mode = 'list';
+						break;
+					case 'settings':
+						mode = 'cog';
+						$('.settingsDiv').css('background', '#ddd');
+						break;
+				}
+			break;
+			//enter
+			case 13:
+				ev.preventDefault();
+				switch(mode){
+					case 'settings':
+						$(settingsArray[settingIndex]).data("enter")();
+						mode = 'login';
+						break;
+					case 'login':
+						console.log("adsf");
+						$(loginDiv).fadeOut("slow");	
+						unselectLogin(logIndex);
+						logIndex = 0;
+						selectLogin(logIndex);
 						mode = 'list';
 						break;
 				}
@@ -672,4 +855,3 @@ function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
 			break;
 	}
 }
-
