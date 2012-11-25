@@ -244,6 +244,8 @@ selectLogin(0);
 	$(radialMenuDiv).addClass('radialMenuDive');
 	$(radialMenuDiv).css({
 		position: 'absolute',
+		display: 'table',
+		'text-align': 'center',
 		right: '0%',
 		bottom: '0%',
 		height: '100%',
@@ -267,54 +269,99 @@ selectLogin(0);
 		background: 'rgba(0,0,0,.6)',
 	})
 	
+	//ShareSpanDiv
+	shareSpanDiv = document.createElement('div');
+	$(shareSpanDiv).addClass("optionSpanDiv");
+
 	//Button
-	$(optionsDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton"/>');
-	
+	$(shareSpanDiv).append('<img src="img/buttonRed.png" alt="shareButton" class="optButton"/>');
+
 	//ShareSpan
 	shareSpan = document.createElement('span');
 	$(shareSpan).addClass("optionSpan");
 	$(shareSpan).text('Share');
-	$(optionsDiv).append(shareSpan);
+	$(shareSpanDiv).append(shareSpan);
+	
+
+	//ViewSpanDiv
+	viewSpanDiv = document.createElement('div');
+	$(viewSpanDiv).addClass("optionSpanDiv");
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton"/>');
+	$(viewSpanDiv).append('<img src="img/buttonBlue.png" alt="viewButton" class="optButton"/>');
 	
 	//ViewSpan
 	viewSpan = document.createElement('span');
 	$(viewSpan).addClass("optionSpan");
 	$(viewSpan).text('View');
-	$(optionsDiv).append(viewSpan);
+	$(viewSpanDiv).append(viewSpan);
 
+	//FlagSpanDiv
+	flagSpanDiv = document.createElement('div');
+	$(flagSpanDiv).addClass("optionSpanDiv");
+	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton"/>');
+	$(flagSpanDiv).append('<img src="img/buttonGreen.png" alt="flagButton" class="optButton"/>');
 	
 	//FlagSpan
 	flagSpan = document.createElement('span');
 	$(flagSpan).addClass("optionSpan");
 	$(flagSpan).text('Flag');
-	$(optionsDiv).append(flagSpan);
+	$(flagSpanDiv).append(flagSpan);
+	
+	//FlagSpanDiv
+	searchSpanDiv = document.createElement('div');
+	$(searchSpanDiv).addClass("optionSpanDiv");
 	
 	//Button
-	$(optionsDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton"/>');
+	$(searchSpanDiv).append('<img src="img/buttonYellow.png" alt="searchButton" class="optButton"/>');
 	
 	//SearchSpan
 	searchSpan = document.createElement('span');
 	$(searchSpan).addClass("optionSpan");
 	$(searchSpan).text('Search');
-	$(optionsDiv).append(searchSpan);
+	$(searchSpanDiv).append(searchSpan);
+	
+	$(optionsDiv).append(searchSpanDiv);
+	$(optionsDiv).append(flagSpanDiv);
+	$(optionsDiv).append(viewSpanDiv);
+	$(optionsDiv).append(shareSpanDiv);
 
 	root.append(optionsDiv);
 
-	$(".optionSpan").css({
+	//CSS of optionDiv
+	$(".optionSpanDiv").css({
+		float: 'right',
+		display: 'table-cell',
 		'font-size': '200%',
+		'text-align': 'left',
+		width: '15%',
+		'vertical-align': 'middle',
+	});
+
+
+	$(".optionSpan").css({
+		display: 'inline-block',
+		'vertical-align': 'middle',
 	});
 
 	$(".optButton").css({
+		display: 'inline-block',
 		'vertical-align': 'middle',
-		height: '98%',
+		height: '92%',
+		position: 'relative',
+		top: ($(optionsDiv).outerHeight()*0.10)+'px',
 	});
 
 	getArticleList();
+
+	scrollBarWidth = 0.015 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
+	for(var i = 0; i < document.styleSheets.length; i ++) {
+		var cursheet = document.styleSheets[i];
+		if(cursheet.title == '4tvStyle') {
+			cursheet.addRule("::-webkit-scrollbar", "width: " + scrollBarWidth + "px" );
+		}
+	} 
 
 	buttonPressed = 0;
 	document.onkeydown = keyStroke;
@@ -590,7 +637,7 @@ function filterArticleElements(text){
 
 function radialMenu(key){
 //String.fromCharCode(e.keyCode)
-	$(radialMenuDiv).hide(600, function() {
+	$(radialMenuDiv).fadeOut(600, function() {
 		$(radialMenuDiv).empty();
 		var image;
 		switch(key){
@@ -604,13 +651,28 @@ function radialMenu(key){
 				//radialKeyStroke(key, func1, func2, func3, func4);
 				image = 'RBView.png';
 				break;
-			case 170: //Search, f
+			case 70: //Search, f
 				//focus on search and allow keyboard to show up
 				break;	
 		}
-		
-		$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="Logo" />');
-		$(radialMenuDiv).show(600);
+
+		if (key !== 70) {	
+			$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="radialMenu" class="radialMenuImg" />');
+			$(radialMenuDiv).fadeIn(400);
+
+			topPadding = Math.abs(($(radialMenuDiv).height() - 548)/2); //548 is the height of the radialMenuImg
+
+			//CSS of radialMenu Images	
+			$(".radialMenuImg").css({
+				position: 'relative',
+				top: topPadding+'px',
+				'text-align': 'center',
+			});
+
+		} else {
+			$(searchBox).focus();
+			mode = 'search';
+		}
 	});
 
 };
@@ -702,7 +764,7 @@ function settingsFocus(bool){
  * 65 = a
  * 83 = s
  * 68 = d
- * 170 = f
+ * 70 = f
  * 13 = enter
  * ;
  */
@@ -719,15 +781,15 @@ function keyStroke(ev) {
 			case 68: //View - d
 				//radialKeyStroke(key, func1, func2, func3, func4);
 				break;
-			case 170: //Search - f
+			case 70: //Search - f
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
 
 		buttonPressed = 0;
-		$(radialMenuDiv).hide(600);
+		$(radialMenuDiv).fadeOut(400);
 	}
-	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 170)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 70)){ 
 		radialMenu(key);
 		buttonPressed = key;
 	} else {
