@@ -889,12 +889,14 @@ function keyStroke(ev) {
 						selectLogin(logIndex);
 						break;
 					case 'login':
-						console.log("adsf");
+						
 						$(loginDiv).fadeOut("slow");	
 						unselectLogin(logIndex);
 						logIndex = 0;
 						//selectLogin(logIndex);
 						mode = 'list';
+						$('.settingsDiv').css('background', '#ddd');
+						$('.settingsDiv').css('display', 'none');
 						break;
 				}
 			break;
