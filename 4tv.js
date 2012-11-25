@@ -824,13 +824,14 @@ function keyStroke(ev) {
 					case 'settings':
 						$(settingsArray[settingIndex]).data("enter")();
 						mode = 'login';
+						selectLogin(logIndex);
 						break;
 					case 'login':
 						console.log("adsf");
 						$(loginDiv).fadeOut("slow");	
 						unselectLogin(logIndex);
 						logIndex = 0;
-						selectLogin(logIndex);
+						//selectLogin(logIndex);
 						mode = 'list';
 						break;
 				}
