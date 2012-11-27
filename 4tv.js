@@ -11,6 +11,8 @@ var logIndex = 0;
 var radialMenuDiv;
 var articleTitle;
 var articleBody;
+var articleTitleFont;
+var articleBodyFont;
 var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
@@ -44,7 +46,7 @@ function init(){
 	background: '#888',
 	})
 	
-	$(loginDiv).prepend('<img src="img/Logo.png" alt="Logo" height="30%"/>');
+	$(loginDiv).prepend('<center><img src="img/Logo.png" alt="Logo" height="30%"/></center>');
 	root.append(loginDiv);
 	
 	
@@ -240,6 +242,9 @@ selectLogin(0);
 	$(articleDiv).append(articleTitle);
 	$(articleDiv).append(articleBody);
 
+	articleBodyFont = parseInt($(articleBody).css('font-size'), 10);
+	articleTitleFont = parseInt($(articleTitle).css('font-size'), 10);
+
 	radialMenuDiv = document.createElement('div');
 	$(radialMenuDiv).addClass('radialMenuDive');
 	$(radialMenuDiv).css({
@@ -282,7 +287,6 @@ selectLogin(0);
 	$(shareSpan).text('Share');
 	$(shareSpanDiv).append(shareSpan);
 	
-
 	//ViewSpanDiv
 	viewSpanDiv = document.createElement('div');
 	$(viewSpanDiv).addClass("optionSpanDiv");
@@ -295,7 +299,8 @@ selectLogin(0);
 	$(viewSpan).addClass("optionSpan");
 	$(viewSpan).text('View');
 	$(viewSpanDiv).append(viewSpan);
-
+	
+	
 	//FlagSpanDiv
 	flagSpanDiv = document.createElement('div');
 	$(flagSpanDiv).addClass("optionSpanDiv");
@@ -323,8 +328,8 @@ selectLogin(0);
 	$(searchSpanDiv).append(searchSpan);
 	
 	$(optionsDiv).append(searchSpanDiv);
-	$(optionsDiv).append(flagSpanDiv);
 	$(optionsDiv).append(viewSpanDiv);
+	$(optionsDiv).append(flagSpanDiv);
 	$(optionsDiv).append(shareSpanDiv);
 
 	root.append(optionsDiv);
@@ -333,7 +338,6 @@ selectLogin(0);
 	$(".optionSpanDiv").css({
 		float: 'right',
 		display: 'table-cell',
-		'font-size': '200%',
 		'text-align': 'left',
 		width: '15%',
 		'vertical-align': 'middle',
@@ -342,6 +346,7 @@ selectLogin(0);
 
 	$(".optionSpan").css({
 		display: 'inline-block',
+		'font-size': '200%',
 		'vertical-align': 'middle',
 	});
 
@@ -437,9 +442,6 @@ logArr.push(loginElement);
 }
 
 
-
-
-
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
@@ -492,37 +494,37 @@ function selectArticle(index){
 
 
 function nextLogin(){
-if(logIndex <logArr.length-1){
-unselectLogin(logIndex);
-logIndex++;
-selectLogin(logIndex);
-}
+	if(logIndex <logArr.length-1){
+		unselectLogin(logIndex);
+		logIndex++;
+		selectLogin(logIndex);
+	}
 }
 
 function previousLogin(){
-if(logIndex > 0){
-unselectLogin(logIndex);
-logIndex--;
-selectLogin(logIndex);
-}
-
+	if(logIndex > 0){
+		unselectLogin(logIndex);
+		logIndex--;
+		selectLogin(logIndex);
+	}
 }
 
 function selectLogin(logIndex){
-if(logIndex > -1){
-$(logArr[logIndex]).css({
-	'background-color': '#ddd',
-	})
-}
+	if(logIndex > -1){
+	$(logArr[logIndex]).css({
+		'background-color': '#ddd',
+		});
+	}
 }
 
 function unselectLogin(index){
-if(logIndex > -1){
-$(logArr[logIndex]).css({
-	'background-color': '#f0c911',
-	})
+	if(logIndex > -1){
+	$(logArr[logIndex]).css({
+		'background-color': '#f0c911',
+		})
+	}
 }
-}
+
 function nextArticle(){
 	if(articleIndex < articleArray.length - 1){
 		articleIndex++;
@@ -648,7 +650,6 @@ function radialMenu(key){
 				image = 'RBFlag.png';
 				break;
 			case 68: //View, d
-				//radialKeyStroke(key, func1, func2, func3, func4);
 				image = 'RBView.png';
 				break;
 			case 70: //Search, f
@@ -756,6 +757,24 @@ function settingsFocus(bool){
 }
 
 
+
+function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
+	switch(key){
+		case 37: //left
+			funcLeft();
+			break;
+		case 38: //up
+			funcUp();
+			break;
+		case 39: //right
+			funcRight();
+			break;
+		case 40: //down
+			funcDown();
+			break;
+	}
+}
+
 //keypress handlers;
 /* 37 = left
  * 38 = up
@@ -779,7 +798,12 @@ function keyStroke(ev) {
 				radialKeyStroke(key, markRead, star, markUnread, unstar);
 				break;
 			case 68: //View - d
-				//radialKeyStroke(key, func1, func2, func3, func4);
+				var prevArticle = function() {
+					if (articleIndex > 0) {
+						previousArticle();
+					}
+				}
+				radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut);
 				break;
 			case 70: //Search - f
 				//focus on search and allow keyboard to show up
@@ -904,19 +928,3 @@ function keyStroke(ev) {
 	}
 }
 
-function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
-	switch(key){
-		case 37: //left
-			funcLeft();
-			break;
-		case 38: //up
-			funcUp();
-			break;
-		case 39: //right
-			funcRight();
-			break;
-		case 40: //down
-			funcDown();
-			break;
-	}
-}
