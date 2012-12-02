@@ -17,6 +17,7 @@ var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
+var cache = {};
 
 var articleIndex;
 var mode = 'login';
@@ -484,12 +485,17 @@ function getArticleList(){
 function getArticleDetails(link){
 	
 	if(fetchArticles){
-		var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
-		$.getJSON(req, function(json){
-			setDisplayedArticle(json);
-			//console.log(json)
-			//articleDetails.push(json);
-		});
+		if(cache[link]){
+			setDisplayedArticle(cache[link]);
+			return cache[link];
+		} else {
+			var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
+			$.getJSON(req, function(json){
+				setDisplayedArticle(json);
+				cache[link] = json;
+				return json;
+			})
+		}
 	} else {
 		//returns article details when supplied with link
 		setDisplayedArticle(testArticles[link]);
