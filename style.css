@@ -40,6 +40,10 @@
 	background-color: #888;
 }
 
+root {
+	overflow: hidden;
+}
+
 body {
 	font-family: "Segoe UI", Frutiger, "Frutiger Linotype", Arial, sans-serif;
 }
