@@ -800,7 +800,7 @@ function keyStroke(ev) {
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
 			case 65: //Share - a
-				//radialKeyStroke(key, func1, func2, func3, func4);
+				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
 				break;
 			case 83: //Flag - s
 				radialKeyStroke(key, markRead, star, markUnread, unstar);

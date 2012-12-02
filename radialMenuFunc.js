@@ -74,11 +74,17 @@ function shareFB() {
 }
 
 function shareTwitter() {
-
+	var url = $(articleArray[articleIndex]).data('data').link;
+	window.open('https://twitter.com/share?url='+url);
 }
 
 function shareGooglePlus() {
+	var url = $(articleArray[articleIndex]).data('data').link;
+	window.open('https://plus.google.com/share?url='+url);
+}
 
+function shareEmail() {
+	
 }
 
 
