@@ -31,7 +31,7 @@ var settingIndex = 0;
 
 //debug options
 var loginScreen = true;
-var fetchArticles = true;
+var fetchArticles = false;
 
 //sets out basic layout
 function init(){
@@ -637,11 +637,14 @@ function makeArticleListElement(data){
 	})
 	$(elementTitle).text(data.title);
 	
-	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
 	
-	$(elementTitle).prepend(unstarIMG);
+	$(elementTitle).prepend(unstarIMG).children().css({
+			'position' : 'relative',
+			'right' : '3px',
+				});
 	
-	$(articleElement).append(elementTitle)
+	$(articleElement).append(elementTitle);
 
 	var elementSnippet = document.createElement('div');
 	$(elementSnippet).addClass('elementSnippet');
