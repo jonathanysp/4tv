@@ -390,7 +390,7 @@ function init(){
 	
 	hintDiv = document.createElement('div');
 	$(hintDiv).addClass("hintDiv");
-	$(hintDiv).text("Press right to see media");
+	$(hintDiv).text("Press \u21e8 to see media");
 	$(hintDiv).css({
 		position: 'absolute',
 		top: '1.5%',
@@ -398,7 +398,7 @@ function init(){
 		background: 'rgba(102,153,204,.8)',
 		padding: '.5%',
 		color: 'white',
-		'font-size': '150%',
+		'font-size': '250%',
 		display: 'none'
 	});
 	$(root).append(hintDiv);
@@ -766,11 +766,13 @@ function setDisplayedArticle(data){
 
 function makeMediaGallery(media){
 	if(media === undefined){
+		$('.mediaImage').detach();
 		return;
 	}
 	$(".galleryDiv").detach();
 	galleryDiv = document.createElement('div');
 	var galleryTitle = document.createElement('div');
+	var tip = document.createElement('div');
 	$(galleryTitle).text("Associated Media");
 	$(galleryTitle).css("margin-bottom", "1%");
 	$(galleryDiv).addClass("galleryDiv");
@@ -787,11 +789,22 @@ function makeMediaGallery(media){
 		display: 'none',
 		right:0,
 	})
+	$(tip).text("Exit \u21e8");
+	$(tip).css({
+		position: 'absolute',
+		top: "1%",
+		right: "1%",
+		color: 'white',
+		'font-size': '80%',
+	});
+
+	$(galleryDiv).append(tip);
 	$(galleryDiv).append(galleryTitle);
 	
 	for(var i = 0; i < media.length; i++){
 		if(media[i].type){
 			var image = document.createElement('div');
+			$(image).addClass("mediaImage");
 			$(image).css({
 				width: '25%',
 				height: $(articleDiv).height()*.18 + "px",
@@ -810,8 +823,8 @@ function makeMediaGallery(media){
 	$(root).append(galleryDiv);
 }
 
-function mediaToggle(){
-	if(parseInt($(galleryDiv).css("width")) === 0){
+function mediaToggle(toggle){
+	if(toggle){
 		$(galleryDiv).css("display", "block");
 		$(galleryDiv).animate({
 			width: "66%",
@@ -996,11 +1009,11 @@ function keyStroke(ev) {
 					//	mode = 'article';
 						break;
 					case 'article':
-						mediaToggle();
+						mediaToggle(true);
 						mode = 'media';
 						break;
 					case 'media':
-						mediaToggle();
+						mediaToggle(false);
 						mode = 'article';
 						break;
 				}
