@@ -28,5 +28,10 @@
 	color: gray;
 }
 
+.articleBody {
+	font-family: "Segoe UI", Frutiger, "Frutiger Linotype", Arial, sans-serif;
+}
 
-
+body {
+	font-family: "Segoe UI", Frutiger, "Frutiger Linotype", Arial, sans-serif;
+}

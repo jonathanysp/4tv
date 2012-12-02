@@ -29,6 +29,10 @@ var settingsDiv;
 var settingsArray = [];
 var settingIndex = 0;
 
+//debug options
+var loginScreen = false;
+var fetchArticles = false;
+
 //sets out basic layout
 function init(){
 	root = $(".root");
@@ -56,6 +60,11 @@ loginList("dan");
 loginList("Guest");
 //must have at least 1 login.
 selectLogin(0);
+
+if(!loginScreen){
+	mode = 'list',
+	$(loginDiv).css("display", "none");
+}
 
 	topDiv = document.createElement('div');
 	$(topDiv).addClass("topDiv");
@@ -101,7 +110,7 @@ selectLogin(0);
 		height: '94%',
 		width: '66%',
 		padding: '2% 2%',
-		background: '#eee',
+		background: '#ddd',
 		'overflow-y': 'auto',
 		'z-index': 10,
 		'display': 'none',
@@ -228,7 +237,7 @@ selectLogin(0);
 		height: '94%',
 		width: '66%',
 		padding: '0% 2%',
-		background: '#eee',
+		background: '#ddd',
 		'overflow-y': 'auto',
 	})
 	root.append(articleDiv);
@@ -382,7 +391,7 @@ selectLogin(0);
 
 
 function loginList(data){
-//make a couple logins.
+
 var loginElement = document.createElement('div');
 $(loginElement).addClass('loginElement');
 //$(loginElement.attr('id', data);
@@ -452,8 +461,11 @@ logArr.push(loginElement);
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
-	//var url = "http://www.npr.org/rss/rss.php?id=1001";
-	var url = 'http://dl.dropbox.com/u/112925/topNews.xml';
+	if(fetchArticles){
+		var url = "http://www.npr.org/rss/rss.php?id=1001";
+	} else {
+		var url = 'http://dl.dropbox.com/u/112925/topNews.xml';
+	}
 
 	$.jGFeed(url, function(xml){
 		feed = xml;
@@ -469,16 +481,18 @@ function getArticleList(){
 //gets article details and sets it as main display article
 //maybe do some caching??
 function getArticleDetails(link){
-	/*
-	var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
-	$.getJSON(req, function(json){
-		setDisplayedArticle(json);
-		//console.log(json)
-		//articleDetails.push(json);
-	});
-	*/
-	//returns article details when supplied with link
-	setDisplayedArticle(testArticles[link]);
+	
+	if(fetchArticles){
+		var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
+		$.getJSON(req, function(json){
+			setDisplayedArticle(json);
+			//console.log(json)
+			//articleDetails.push(json);
+		});
+	} else {
+		//returns article details when supplied with link
+		setDisplayedArticle(testArticles[link]);
+	}
 }
 
 function addToList(array){
@@ -488,8 +502,8 @@ function addToList(array){
 }
 
 function selectArticle(index){
+	articleIndex = index;
 	markRead();
-
 	$('.articleElement').css({
 		background: '#ddd',
 	})
@@ -869,6 +883,7 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
+					
 						mode = 'cog';
 						break;
 					case 'settings':
@@ -887,7 +902,7 @@ function keyStroke(ev) {
 						focusArticle(true);
 						break;
 					case 'search':
-						mode = 'article';
+					//	mode = 'article';
 						break;
 					case 'cog':
 						mode = 'settings';
@@ -900,6 +915,8 @@ function keyStroke(ev) {
 			case 37:
 				ev.preventDefault();
 				switch(mode){
+					case 'search':
+						break;
 					case 'login':
 						break;
 					case 'article':
