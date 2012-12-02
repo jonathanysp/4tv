@@ -796,6 +796,7 @@ function makeMediaGallery(media){
 		color: 'white',
 		overflow: 'auto',
 		right: '0%',
+		display: "none",
 	})
 	$(galleryDiv).append(galleryTitle);
 	
