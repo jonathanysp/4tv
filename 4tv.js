@@ -30,8 +30,8 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
-var loginScreen = false;
-var fetchArticles = false;
+var loginScreen = true;
+var fetchArticles = true;
 
 //sets out basic layout
 function init(){
@@ -632,6 +632,10 @@ function makeArticleListElement(data){
 		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
+	
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	
+	$(elementTitle).prepend(unstarIMG);
 	
 	$(articleElement).append(elementTitle)
 
