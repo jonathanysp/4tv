@@ -70,7 +70,8 @@ function zoomOut() {
 
 
 function shareFB() {
-
+	var url = $(articleArray[articleIndex]).data('data').link;
+	window.open('http://www.facebook.com/sharer.php?u='+url);
 }
 
 function shareTwitter() {
@@ -84,7 +85,12 @@ function shareGooglePlus() {
 }
 
 function shareEmail() {
-	
+	var url = encodeURIComponent($(articleArray[articleIndex]).data('data').link);
+	var subject = escape("Check out this article I read in 4TV!");
+	var bodyText = escape("Hey, I read this awesome article on 4TV. You should read it: ") +  url;
+    var link = "https://mail.google.com/mail/?view=cm&fs=1&su=" + subject + "&body=" + bodyText;
+
+    window.open(link);
 }
 
 
