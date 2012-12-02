@@ -110,7 +110,7 @@ if(!loginScreen){
 		height: '94%',
 		width: '66%',
 		padding: '2% 2%',
-		background: '#eee',
+		background: '#ddd',
 		'overflow-y': 'auto',
 		'z-index': 10,
 		'display': 'none',
