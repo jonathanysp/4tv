@@ -31,9 +31,11 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
+
 var loginScreen = false;
 var fetchArticles = false;
 var cacheAmount = 5;
+
 
 //sets out basic layout
 function init(){
@@ -76,7 +78,7 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#888',
+		background: '#6699cc',
 	})
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
@@ -379,7 +381,7 @@ function init(){
 
 	getArticleList();
 
-	scrollBarWidth = 0.015 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
+	scrollBarWidth = 0.005 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
 	for(var i = 0; i < document.styleSheets.length; i ++) {
 		var cursheet = document.styleSheets[i];
 		if(cursheet.title == '4tvStyle') {
@@ -637,10 +639,9 @@ function makeArticleListElement(data){
 	$(articleElement).css({
 		padding: '1% 3%',
 		margin: '1% 1%',
-		width: '10%',
 	})
 	$(listDiv).append(articleElement);
-	$(articleElement).outerWidth($(listDiv).outerWidth()*0.93);
+	$(articleElement).outerWidth($(listDiv).outerWidth()*0.965);
 	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
 
 	var elementTitle = document.createElement('div');
@@ -653,11 +654,14 @@ function makeArticleListElement(data){
 	})
 	$(elementTitle).text(data.title);
 	
-	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
 	
-	$(elementTitle).prepend(unstarIMG);
+	$(elementTitle).prepend(unstarIMG).children().css({
+			'position' : 'relative',
+			'right' : '3px',
+				});
 	
-	$(articleElement).append(elementTitle)
+	$(articleElement).append(elementTitle);
 
 	var elementSnippet = document.createElement('div');
 	$(elementSnippet).addClass('elementSnippet');

@@ -4,7 +4,11 @@ function star() {
 	
 		
 		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
-		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/star.png" alt="star" height="35%"/></right>');
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<left><img src="img/star.png" alt="star" height="35%"/></left>').children().css({
+			'position' : 'relative',
+			'right' : '3px',
+			});
+			
 		
 }
 
@@ -12,7 +16,10 @@ function unstar() {
 	//change to unstarred 
 
 		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
-		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/unstar.png" alt="unstar" height="35%"/></right>');
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>').children().css({
+			'position' : 'relative',
+			'right' : '3px',
+				});
 }
 
 function markRead() {
@@ -77,17 +84,17 @@ function zoomOut() {
 
 function shareFB() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('http://www.facebook.com/sharer.php?u='+url);
+	window.open('http://www.facebook.com/sharer.php?u='+url, '','height=360px,width=550px');
 }
 
 function shareTwitter() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('https://twitter.com/share?url='+url);
+	window.open('https://twitter.com/share?url='+url, '', 'height=360px,width=550px');
 }
 
 function shareGooglePlus() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('https://plus.google.com/share?url='+url);
+	window.open('https://plus.google.com/share?url='+url, '', 'height=360px,width=550px');
 }
 
 function shareEmail() {
@@ -96,7 +103,7 @@ function shareEmail() {
 	var bodyText = escape("Hey, I read this awesome article on 4TV. You should read it: ") +  url;
     var link = "https://mail.google.com/mail/?view=cm&fs=1&su=" + subject + "&body=" + bodyText;
 
-    window.open(link);
+    window.open(link, '', 'height=360px,width=550px');
 }
 
 
