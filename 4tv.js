@@ -6,6 +6,7 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
+var galleryDiv
 var logArr = [];
 var logIndex = 0;
 var radialMenuDiv;
@@ -782,21 +783,23 @@ function makeMediaGallery(media){
 		return;
 	}
 	$(".galleryDiv").detach();
-	var galleryDiv = document.createElement('div');
+	galleryDiv = document.createElement('div');
 	var galleryTitle = document.createElement('div');
 	$(galleryTitle).text("Associated Media");
+	$(galleryTitle).css("margin-bottom", "1%");
 	$(galleryDiv).addClass("galleryDiv");
 	$(galleryDiv).css({
 		position: 'absolute',
-		width: "66%",
+		width: "0%",
 		padding: "1%",
+		top: "4%",
 		background: "rgba(0,0,0,.9)",
 		'margin-bottom': '1%',
 		'font-size': articleTitleFont,
 		color: 'white',
 		overflow: 'auto',
-		right: '0%',
-		display: "none",
+		display: 'none',
+		right:0,
 	})
 	$(galleryDiv).append(galleryTitle);
 	
@@ -804,9 +807,8 @@ function makeMediaGallery(media){
 		if(media[i].type){
 			var image = document.createElement('div');
 			$(image).css({
-				position: "absolute",
-				width: '30%',
-				height: '18%',
+				width: '25%',
+				height: $(articleDiv).height()*.18 + "px",
 				'background-color': "black",
 				'background-image': "url("+ media[i].link +")",
 				'background-repeat':'no-repeat',
@@ -820,6 +822,21 @@ function makeMediaGallery(media){
 		}
 	}
 	$(root).append(galleryDiv);
+}
+
+function mediaToggle(){
+	if(parseInt($(galleryDiv).css("width")) === 0){
+		$(galleryDiv).css("display", "block");
+		$(galleryDiv).animate({
+			width: "66%",
+		}, 500);
+	} else {
+		$(galleryDiv).animate({
+			width: "0%",
+		}, 500, function(){
+			$(galleryDiv).css("display", "none");
+		});
+	}
 }
 
 function newlineToBr(string){
@@ -961,8 +978,10 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
-					
-						mode = 'cog';
+						
+						mode = 'settings';
+						$('.settingsDiv').css('background', '#ccc');
+						selectSetting();
 						break;
 					case 'settings':
 						prevSetting();
@@ -982,10 +1001,13 @@ function keyStroke(ev) {
 					case 'search':
 					//	mode = 'article';
 						break;
-					case 'cog':
-						mode = 'settings';
-						$('.settingsDiv').css('background', '#ccc');
-						selectSetting();
+					case 'article':
+						mediaToggle();
+						mode = 'media';
+						break;
+					case 'media':
+						mediaToggle();
+						mode = 'article';
 						break;
 				}
 				break;
