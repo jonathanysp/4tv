@@ -666,21 +666,21 @@ function radialMenu(key){
 		$(radialMenuDiv).empty();
 		var image;
 		switch(key){
-			case 65: //share, a
+			case 49: //share, a
 				image = 'RBShare.png';
 				break;
-			case 83: //Flag, s
+			case 50: //Flag, s
 				image = 'RBFlag.png';
 				break;
-			case 68: //View, d
+			case 51: //View, d
 				image = 'RBView.png';
 				break;
-			case 70: //Search, f
+			case 52: //Search, f
 				//focus on search and allow keyboard to show up
 				break;	
 		}
 
-		if (key !== 70) {	
+		if (key !== 52) {	
 			$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="radialMenu" class="radialMenuImg" />');
 			$(radialMenuDiv).fadeIn(400);
 
@@ -815,13 +815,13 @@ function keyStroke(ev) {
 	key = ((ev.which)||(ev.keyCode));
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
-			case 65: //Share - a
+			case 49: //Share - a
 				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
 				break;
-			case 83: //Flag - s
+			case 50: //Flag - s
 				radialKeyStroke(key, markRead, star, markUnread, unstar);
 				break;
-			case 68: //View - d
+			case 51: //View - d
 				var prevArticle = function() {
 					if (articleIndex > 0) {
 						previousArticle();
@@ -829,7 +829,7 @@ function keyStroke(ev) {
 				}
 				radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut);
 				break;
-			case 70: //Search - f
+			case 52: //Search - f
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
@@ -837,7 +837,7 @@ function keyStroke(ev) {
 		buttonPressed = 0;
 		$(radialMenuDiv).fadeOut(400);
 	}
-	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 70)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 49 || key == 50 || key == 51 || key == 52)){ 
 		radialMenu(key);
 		buttonPressed = key;
 		return false;
