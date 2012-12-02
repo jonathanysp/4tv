@@ -352,9 +352,12 @@ function init(){
 	$(optionsDiv).append(viewSpanDiv);
 	$(optionsDiv).append(flagSpanDiv);
 	$(optionsDiv).append(shareSpanDiv);
-starIMG = $('<left><img src="img/star.png" alt="star" height="35%"/></left>');
-root.prepend(starIMG);
-$(starIMG).remove();
+	
+	//hacky workaround to load the star image.  
+	starIMG = $('<left><img src="img/star.png" alt="star" height="35%"/></left>');
+	root.prepend(starIMG);
+	$(starIMG).remove();
+	
 	root.append(optionsDiv);
 
 	//CSS of optionDiv
