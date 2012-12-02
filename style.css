@@ -2,7 +2,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: none;
+  background: #fff;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -11,16 +11,6 @@
   border-bottom: 1px solid #fff;
 }
  
-::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url(img/scroll_arrow_up.png);
-  background-size:100% 100%;
-}
- 
-::-webkit-scrollbar-button:vertical:increment {
-  background-image: url(img/scroll_arrow_down.png) ;
-  background-size:100% 100%;
-}
-
 .starred {
 	color: yellow;
 }
@@ -41,7 +31,7 @@
 }
 
 .articleElement.selected {
-	color: #fff;
+	color: #ffffff;
 	background-color: #888;
 }
 

@@ -77,17 +77,17 @@ function zoomOut() {
 
 function shareFB() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('http://www.facebook.com/sharer.php?u='+url);
+	window.open('http://www.facebook.com/sharer.php?u='+url, '','height=360px,width=550px');
 }
 
 function shareTwitter() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('https://twitter.com/share?url='+url);
+	window.open('https://twitter.com/share?url='+url, '', 'height=360px,width=550px');
 }
 
 function shareGooglePlus() {
 	var url = $(articleArray[articleIndex]).data('data').link;
-	window.open('https://plus.google.com/share?url='+url);
+	window.open('https://plus.google.com/share?url='+url, '', 'height=360px,width=550px');
 }
 
 function shareEmail() {
@@ -96,7 +96,7 @@ function shareEmail() {
 	var bodyText = escape("Hey, I read this awesome article on 4TV. You should read it: ") +  url;
     var link = "https://mail.google.com/mail/?view=cm&fs=1&su=" + subject + "&body=" + bodyText;
 
-    window.open(link);
+    window.open(link, '', 'height=360px,width=550px');
 }
 
 

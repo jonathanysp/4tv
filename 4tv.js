@@ -74,7 +74,7 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#888',
+		background: '#6699cc',
 	})
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
@@ -377,7 +377,7 @@ function init(){
 
 	getArticleList();
 
-	scrollBarWidth = 0.015 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
+	scrollBarWidth = 0.005 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
 	for(var i = 0; i < document.styleSheets.length; i ++) {
 		var cursheet = document.styleSheets[i];
 		if(cursheet.title == '4tvStyle') {
@@ -621,10 +621,9 @@ function makeArticleListElement(data){
 	$(articleElement).css({
 		padding: '1% 3%',
 		margin: '1% 1%',
-		width: '10%',
 	})
 	$(listDiv).append(articleElement);
-	$(articleElement).outerWidth($(listDiv).outerWidth()*0.93);
+	$(articleElement).outerWidth($(listDiv).outerWidth()*0.965);
 	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
 
 	var elementTitle = document.createElement('div');
