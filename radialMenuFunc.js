@@ -2,11 +2,17 @@ function star() {
 	//change to starred 
 	$(articleArray[articleIndex]).addClass('starred');
 	
+		
+		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/star.png" alt="star" height="35%"/></right>');
+		
 }
 
 function unstar() {
 	//change to unstarred 
-	$(articleArray[articleIndex]).removeClass('starred');
+
+		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/unstar.png" alt="unstar" height="35%"/></right>');
 }
 
 function markRead() {

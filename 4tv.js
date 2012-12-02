@@ -30,8 +30,8 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
-var loginScreen = false;
-var fetchArticles = false;
+var loginScreen = true;
+var fetchArticles = true;
 
 //sets out basic layout
 function init(){
@@ -54,17 +54,17 @@ function init(){
 	root.append(loginDiv);
 	
 	
-loginList("margi");
-loginList("jon");
-loginList("dan");
-loginList("Guest");
-//must have at least 1 login.
-selectLogin(0);
+	loginList("margi");
+	loginList("jon");
+	loginList("dan");
+	loginList("Guest");
+	//must have at least 1 login.
+	selectLogin(0);
 
-if(!loginScreen){
-	mode = 'list',
-	$(loginDiv).css("display", "none");
-}
+	if(!loginScreen){
+		mode = 'list',
+		$(loginDiv).css("display", "none");
+	}
 
 	topDiv = document.createElement('div');
 	$(topDiv).addClass("topDiv");
@@ -206,12 +206,12 @@ if(!loginScreen){
 	listDiv = document.createElement('div');
 	$(listDiv).addClass("listDiv");
 	$(listDiv).css({
+		'background-color': '#fff',
 		position: 'absolute',
 		left: '0%',
 		top: $(topDiv).height() + $(searchDiv).outerHeight(),
 		width: '30%',
-		height: '81%',
-		background: '#aaa',
+		height: '80.5%',
 		'overflow-y': 'auto',
 		'overflow-x': 'hidden',
 	})
@@ -393,50 +393,50 @@ if(!loginScreen){
 
 function loginList(data){
 
-var loginElement = document.createElement('div');
-$(loginElement).addClass('loginElement');
-//$(loginElement.attr('id', data);
-$(loginElement).css({
-position: 'relative',
-	top: '10%',
-	left: '45%',
-	'-moz-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-	'-webkit-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-	'box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-	'background-color': '#f0c911',
-	'-moz-border-radius': '21px',
-	'-webkit-border-radius': '21px',
-	'border-radius': '21px',
-	'border':  '3px solid #e65f44',
-	'display': 'block',
-	'color': '#c92200',
-	'font-family': 'arial',
-	'font-size': '28px',
-	'font-weight': 'bold',
-	'padding':'22px 29px',
-	'text-decoration':'none',
-	'text-shadow':'1px 1px 0px #ded17c',
-})
+	var loginElement = document.createElement('div');
+	$(loginElement).addClass('loginElement');
+	//$(loginElement.attr('id', data);
+	$(loginElement).css({
+	position: 'relative',
+		top: '10%',
+		left: '45%',
+		'-moz-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+		'-webkit-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+		'box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
+		'background-color': '#f0c911',
+		'-moz-border-radius': '21px',
+		'-webkit-border-radius': '21px',
+		'border-radius': '21px',
+		'border':  '3px solid #e65f44',
+		'display': 'block',
+		'color': '#c92200',
+		'font-family': 'arial',
+		'font-size': '28px',
+		'font-weight': 'bold',
+		'padding':'22px 29px',
+		'text-decoration':'none',
+		'text-shadow':'1px 1px 0px #ded17c',
+	})
 
-$(loginDiv).append(loginElement);
-$(loginElement).outerWidth($(loginDiv).outerWidth()/7);
-//$(loginElement).outerHeight($(loginDiv).outerHeight()/8);
+	$(loginDiv).append(loginElement);
+	$(loginElement).outerWidth($(loginDiv).outerWidth()/7);
+	//$(loginElement).outerHeight($(loginDiv).outerHeight()/8);
 
-var logTitle = document.createElement('div');
-$(logTitle).addClass('logTitle');
-$(logTitle).css({
-position: 'absolute',
-left: '0%',
-top: '0%',
-height: '100%',
-		width: '100%',
-		'font-size': '120%',
-		'font-Weight': 'Bold',
-		'text-align': 'center',
-		})
+	var logTitle = document.createElement('div');
+	$(logTitle).addClass('logTitle');
+	$(logTitle).css({
+	position: 'absolute',
+	left: '0%',
+	top: '0%',
+	height: '100%',
+			width: '100%',
+			'font-size': '120%',
+			'font-Weight': 'Bold',
+			'text-align': 'center',
+			})
 
-$(logTitle).text(data);
-$(loginElement).append(logTitle);
+	$(logTitle).text(data);
+	$(loginElement).append(logTitle);
 
 
 	//click func
@@ -451,7 +451,7 @@ $(loginElement).append(logTitle);
 			display: 'none',
 		})
 	})
-logArr.push(loginElement);
+	logArr.push(loginElement);
 
 	return loginElement;
 
@@ -505,12 +505,9 @@ function addToList(array){
 function selectArticle(index){
 	articleIndex = index;
 	markRead();
-	$('.articleElement').css({
-		background: '#ddd',
-	})
-	$(articleArray[index]).css({
-		background:'#888',
-	})
+	$('.selected').removeClass('selected');
+	
+	$(articleArray[index]).addClass('selected');
 	getArticleDetails($(articleArray[index]).data('data').link);
 }
 
@@ -557,7 +554,14 @@ function nextArticle(){
 		}
 		selectArticle(articleIndex);
 	}
-	if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
+
+	if (articleIndex == articleArray.length - 1) {
+		//Scroll all the way to the bottom if it's the last element.
+		$(listDiv).animate({
+			scrollTop: $(document).height(),
+		}, 500)
+	}
+	else if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
 		$(listDiv).animate({
 			scrollTop: $(articleArray[articleIndex - 1]).position().top + $(listDiv).scrollTop(),
 		}, 500)
@@ -615,31 +619,34 @@ function makeArticleListElement(data){
 	$(articleElement).addClass('articleElement');
 	$(articleElement).attr('id', data.title);
 	$(articleElement).css({
-		border: '1px solid black',
-		background: '#ddd',
 		padding: '1% 3%',
+		margin: '1% 1%',
+		width: '10%',
 	})
 	$(listDiv).append(articleElement);
-	$(articleElement).outerWidth($(listDiv).outerWidth());
+	$(articleElement).outerWidth($(listDiv).outerWidth()*0.93);
 	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
 
 	var elementTitle = document.createElement('div');
 	$(elementTitle).addClass('elementTitle');
 	$(elementTitle).css({
 		height: '40%',
-		width: '100%',
 		'font-size': '140%',
 		'font-Weight': 'Bold',
 		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
+	
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	
+	$(elementTitle).prepend(unstarIMG);
+	
 	$(articleElement).append(elementTitle)
 
 	var elementSnippet = document.createElement('div');
 	$(elementSnippet).addClass('elementSnippet');
 	$(elementSnippet).css({
 		height: '50%',
-		width: '100%',
 		'font-size': '120%',
 		'color': '#444',
 	})
