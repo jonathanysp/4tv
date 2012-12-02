@@ -553,7 +553,14 @@ function nextArticle(){
 		}
 		selectArticle(articleIndex);
 	}
-	if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
+
+	if (articleIndex == articleArray.length - 1) {
+		//Scroll all the way to the bottom if it's the last element.
+		$(listDiv).animate({
+			scrollTop: $(document).height(),
+		}, 500)
+	}
+	else if($(articleArray[articleIndex]).position().top > $(listDiv).height()-scrollFactor){
 		$(listDiv).animate({
 			scrollTop: $(articleArray[articleIndex - 1]).position().top + $(listDiv).scrollTop(),
 		}, 500)
