@@ -32,7 +32,7 @@ var settingIndex = 0;
 
 //debug options
 var loginScreen = false;
-var fetchArticles = true;
+var fetchArticles = false;
 var cacheAmount = 5;
 
 //sets out basic layout
@@ -769,7 +769,7 @@ function setDisplayedArticle(data){
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
 	
-	$(articleDiv).append(makeMediaGallery(data.media));
+	makeMediaGallery(data.media);
 	articleDiv.scrollTop = 0;
 }
 
@@ -783,13 +783,15 @@ function makeMediaGallery(media){
 	$(galleryTitle).text("Associated Media");
 	$(galleryDiv).addClass("galleryDiv");
 	$(galleryDiv).css({
-		width: "100%",
+		position: 'absolute',
+		width: "66%",
 		padding: "1%",
-		background: "rgba(0,0,0,.6)",
+		background: "rgba(0,0,0,.9)",
 		'margin-bottom': '1%',
 		'font-size': articleTitleFont,
 		color: 'white',
 		overflow: 'auto',
+		right: '0%',
 	})
 	$(galleryDiv).append(galleryTitle);
 	
@@ -797,6 +799,7 @@ function makeMediaGallery(media){
 		if(media[i].type){
 			var image = document.createElement('div');
 			$(image).css({
+				position: "absolute",
 				width: '30%',
 				height: '18%',
 				'background-color': "black",
@@ -811,7 +814,7 @@ function makeMediaGallery(media){
 			$(galleryDiv).append(image);
 		}
 	}
-	return galleryDiv;
+	$(root).append(galleryDiv);
 }
 
 function newlineToBr(string){
