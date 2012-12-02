@@ -78,7 +78,7 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#888',
+		background: '#6699cc',
 	})
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
@@ -383,7 +383,7 @@ $(starIMG).remove();
 
 	getArticleList();
 
-	scrollBarWidth = 0.015 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
+	scrollBarWidth = 0.005 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
 	for(var i = 0; i < document.styleSheets.length; i ++) {
 		var cursheet = document.styleSheets[i];
 		if(cursheet.title == '4tvStyle') {
@@ -641,10 +641,9 @@ function makeArticleListElement(data){
 	$(articleElement).css({
 		padding: '1% 3%',
 		margin: '1% 1%',
-		width: '10%',
 	})
 	$(listDiv).append(articleElement);
-	$(articleElement).outerWidth($(listDiv).outerWidth()*0.93);
+	$(articleElement).outerWidth($(listDiv).outerWidth()*0.965);
 	$(articleElement).outerHeight($(listDiv).outerHeight()/5);
 
 	var elementTitle = document.createElement('div');
@@ -776,7 +775,7 @@ function setDisplayedArticle(data){
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
 	
-	$(articleDiv).append(makeMediaGallery(data.media));
+	makeMediaGallery(data.media);
 	articleDiv.scrollTop = 0;
 }
 
@@ -790,13 +789,16 @@ function makeMediaGallery(media){
 	$(galleryTitle).text("Associated Media");
 	$(galleryDiv).addClass("galleryDiv");
 	$(galleryDiv).css({
-		width: "100%",
+		position: 'absolute',
+		width: "66%",
 		padding: "1%",
-		background: "rgba(0,0,0,.6)",
+		background: "rgba(0,0,0,.9)",
 		'margin-bottom': '1%',
 		'font-size': articleTitleFont,
 		color: 'white',
 		overflow: 'auto',
+		right: '0%',
+		display: "none",
 	})
 	$(galleryDiv).append(galleryTitle);
 	
@@ -804,6 +806,7 @@ function makeMediaGallery(media){
 		if(media[i].type){
 			var image = document.createElement('div');
 			$(image).css({
+				position: "absolute",
 				width: '30%',
 				height: '18%',
 				'background-color': "black",
@@ -818,7 +821,7 @@ function makeMediaGallery(media){
 			$(galleryDiv).append(image);
 		}
 	}
-	return galleryDiv;
+	$(root).append(galleryDiv);
 }
 
 function newlineToBr(string){
