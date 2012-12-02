@@ -6,6 +6,7 @@ var listDiv;
 var statusDiv;
 var articleDiv;
 var optionsDiv;
+var galleryDiv
 var logArr = [];
 var logIndex = 0;
 var radialMenuDiv;
@@ -354,7 +355,12 @@ function init(){
 	$(optionsDiv).append(viewSpanDiv);
 	$(optionsDiv).append(flagSpanDiv);
 	$(optionsDiv).append(shareSpanDiv);
-
+	
+	//hacky workaround to load the star image.  
+	starIMG = $('<left><img src="img/star.png" alt="star" height="35%"/></left>');
+	root.prepend(starIMG);
+	$(starIMG).remove();
+	
 	root.append(optionsDiv);
 
 	//CSS of optionDiv
@@ -620,7 +626,7 @@ function makeArticleListElement(data){
 	$(elementTitle).text(data.title);
 	
 	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
-	
+
 	$(elementTitle).prepend(unstarIMG).children().css({
 			'position' : 'relative',
 			'right' : '3px',
@@ -738,7 +744,7 @@ function setDisplayedArticle(data){
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
 	
-	$(articleDiv).append(makeMediaGallery(data.media));
+	makeMediaGallery(data.media);
 	articleDiv.scrollTop = 0;
 }
 
@@ -747,18 +753,23 @@ function makeMediaGallery(media){
 		return;
 	}
 	$(".galleryDiv").detach();
-	var galleryDiv = document.createElement('div');
+	galleryDiv = document.createElement('div');
 	var galleryTitle = document.createElement('div');
 	$(galleryTitle).text("Associated Media");
+	$(galleryTitle).css("margin-bottom", "1%");
 	$(galleryDiv).addClass("galleryDiv");
 	$(galleryDiv).css({
-		width: "100%",
+		position: 'absolute',
+		width: "0%",
 		padding: "1%",
-		background: "rgba(0,0,0,.6)",
+		top: "4%",
+		background: "rgba(0,0,0,.9)",
 		'margin-bottom': '1%',
 		'font-size': articleTitleFont,
 		color: 'white',
 		overflow: 'auto',
+		display: 'none',
+		right:0,
 	})
 	$(galleryDiv).append(galleryTitle);
 	
@@ -766,8 +777,8 @@ function makeMediaGallery(media){
 		if(media[i].type){
 			var image = document.createElement('div');
 			$(image).css({
-				width: '30%',
-				height: '18%',
+				width: '25%',
+				height: $(articleDiv).height()*.18 + "px",
 				'background-color': "black",
 				'background-image': "url("+ media[i].link +")",
 				'background-repeat':'no-repeat',
@@ -780,7 +791,22 @@ function makeMediaGallery(media){
 			$(galleryDiv).append(image);
 		}
 	}
-	return galleryDiv;
+	$(root).append(galleryDiv);
+}
+
+function mediaToggle(){
+	if(parseInt($(galleryDiv).css("width")) === 0){
+		$(galleryDiv).css("display", "block");
+		$(galleryDiv).animate({
+			width: "66%",
+		}, 500);
+	} else {
+		$(galleryDiv).animate({
+			width: "0%",
+		}, 500, function(){
+			$(galleryDiv).css("display", "none");
+		});
+	}
 }
 
 function newlineToBr(string){
@@ -922,8 +948,10 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
-					
-						mode = 'cog';
+						
+						mode = 'settings';
+						$('.settingsDiv').css('background', '#ccc');
+						selectSetting();
 						break;
 					case 'settings':
 						prevSetting();
@@ -943,10 +971,13 @@ function keyStroke(ev) {
 					case 'search':
 					//	mode = 'article';
 						break;
-					case 'cog':
-						mode = 'settings';
-						$('.settingsDiv').css('background', '#ccc');
-						selectSetting();
+					case 'article':
+						mediaToggle();
+						mode = 'media';
+						break;
+					case 'media':
+						mediaToggle();
+						mode = 'article';
 						break;
 				}
 				break;
