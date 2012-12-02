@@ -17,6 +17,7 @@ var articleArray = [];
 var articleIndex = 0;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
+var cache = {};
 
 var articleIndex;
 var mode = 'login';
@@ -30,8 +31,11 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
-var loginScreen = true;
-var fetchArticles = true;
+
+var loginScreen = false;
+var fetchArticles = false;
+var cacheAmount = 5;
+
 
 //sets out basic layout
 function init(){
@@ -473,26 +477,40 @@ function getArticleList(){
 		for (var i = 0; i < feed.entries.length; i++){
 			articleArray.push(makeArticleListElement(feed.entries[i]));
 		}
-		//getArticleDetails(feed.entries[0].link);
+		precache(feed);
 		selectArticle(0);
 	}, 10)
 }
 
 //uses diffbot (only use in final build)
 //gets article details and sets it as main display article
-//maybe do some caching??
-function getArticleDetails(link){
+function getArticleDetails(link, silent){
 	
 	if(fetchArticles){
-		var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
-		$.getJSON(req, function(json){
-			setDisplayedArticle(json);
-			//console.log(json)
-			//articleDetails.push(json);
-		});
+		if(cache[link]){
+			if(!silent){
+				setDisplayedArticle(cache[link]);
+			}
+			return cache[link];
+		} else {
+			var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
+			$.getJSON(req, function(json){
+				if(!silent){
+					setDisplayedArticle(json);
+				}
+				cache[link] = json;
+				return json;
+			})
+		}
 	} else {
 		//returns article details when supplied with link
 		setDisplayedArticle(testArticles[link]);
+	}
+}
+
+function precache(){
+	for(var i = 0; i <= cacheAmount; i++){
+		getArticleDetails(feed.entries[i].link, true);
 	}
 }
 
@@ -636,11 +654,14 @@ function makeArticleListElement(data){
 	})
 	$(elementTitle).text(data.title);
 	
-	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
 	
-	$(elementTitle).prepend(unstarIMG);
+	$(elementTitle).prepend(unstarIMG).children().css({
+			'position' : 'relative',
+			'right' : '3px',
+				});
 	
-	$(articleElement).append(elementTitle)
+	$(articleElement).append(elementTitle);
 
 	var elementSnippet = document.createElement('div');
 	$(elementSnippet).addClass('elementSnippet');
@@ -753,10 +774,13 @@ function setDisplayedArticle(data){
 	$(articleTitle).after(images[index]);
 	
 	$(articleDiv).append(makeMediaGallery(data.media));
-	scrollArticle(0);
+	articleDiv.scrollTop = 0;
 }
 
 function makeMediaGallery(media){
+	if(media === undefined){
+		return;
+	}
 	$(".galleryDiv").detach();
 	var galleryDiv = document.createElement('div');
 	var galleryTitle = document.createElement('div');
@@ -786,6 +810,7 @@ function makeMediaGallery(media){
 				'background-size': 'contain',
 				'float': 'left',
 				'margin-left': '1%',
+				'margin-bottom': '1%',
 			})
 			$(galleryDiv).append(image);
 		}
