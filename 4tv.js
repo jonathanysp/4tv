@@ -618,6 +618,7 @@ function makeArticleListElement(data){
 		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
+	
 	$(articleElement).append(elementTitle)
 
 	var elementSnippet = document.createElement('div');
