@@ -352,7 +352,9 @@ function init(){
 	$(optionsDiv).append(viewSpanDiv);
 	$(optionsDiv).append(flagSpanDiv);
 	$(optionsDiv).append(shareSpanDiv);
-
+starIMG = $('<left><img src="img/star.png" alt="star" height="35%"/></left>');
+root.prepend(starIMG);
+$(starIMG).remove();
 	root.append(optionsDiv);
 
 	//CSS of optionDiv
@@ -656,7 +658,7 @@ function makeArticleListElement(data){
 	$(elementTitle).text(data.title);
 	
 	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
-	
+
 	$(elementTitle).prepend(unstarIMG).children().css({
 			'position' : 'relative',
 			'right' : '3px',
