@@ -114,10 +114,12 @@ selectLogin(0);
 	$(switchUserDiv).addClass("setting");
 	$(switchUserDiv).css({
 		width: '100%',
-		height: "10%",
-		border: '1px solid black',
-		background: "#888",
+		height: "9%",
+		background: "#eee",
 		'margin-bottom': '2%',
+		'text-align': 'center',
+		'padding': '1% 0%',
+		'font-size': '150%',
 	})
 	$(switchUserDiv).data("enter", function(){
 		
@@ -125,17 +127,22 @@ selectLogin(0);
 		logIndex = 0;
 		
 	})
-	$(switchUserDiv).text("Switch User");
+	$(switchUserDiv).html("<p>Switch User</p>");
 
 	var quitDiv = document.createElement('div');
 	$(quitDiv).addClass('quitDiv');
 	$(quitDiv).addClass("setting");
 	$(quitDiv).css({
 		width: '100%',
-		height: "10%",
-		border: '1px solid black'
+		height: "9%",
+		background: "#eee",
+		'margin-bottom': '2%',
+		'text-align': 'center',
+		'padding': '1% 0%',
+		'font-size': '150%',
+
 	})
-	$(quitDiv).text("Quit");
+	$(quitDiv).html("<p>Quit</p>");
 	$(quitDiv).data("enter", function(){
 		window.close();
 	})
@@ -580,7 +587,7 @@ function prevSetting(){
 }
 
 function selectSetting(){
-	$('.setting').css('background', 'none');
+	$('.setting').css('background', '#eee');
 	$(settingsArray[settingIndex]).css('background', '#888');
 }
 
@@ -884,6 +891,7 @@ function keyStroke(ev) {
 					case 'cog':
 						mode = 'settings';
 						$('.settingsDiv').css('background', '#ccc');
+						selectSetting();
 						break;
 				}
 				break;
