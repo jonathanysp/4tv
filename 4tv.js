@@ -375,7 +375,7 @@ selectLogin(0);
 
 
 function loginList(data){
-//make a couple logins.
+
 var loginElement = document.createElement('div');
 $(loginElement).addClass('loginElement');
 //$(loginElement.attr('id', data);
@@ -861,6 +861,7 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
+					
 						mode = 'cog';
 						break;
 					case 'settings':
@@ -879,7 +880,7 @@ function keyStroke(ev) {
 						focusArticle(true);
 						break;
 					case 'search':
-						mode = 'article';
+					//	mode = 'article';
 						break;
 					case 'cog':
 						mode = 'settings';
@@ -891,6 +892,8 @@ function keyStroke(ev) {
 			case 37:
 				ev.preventDefault();
 				switch(mode){
+					case 'search':
+						break;
 					case 'login':
 						break;
 					case 'article':
