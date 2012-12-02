@@ -107,7 +107,7 @@ if(!loginScreen){
 		position: 'absolute',
 		right: '0%',
 		top: '0%',
-		height: '94%',
+		height: '92%',
 		width: '66%',
 		padding: '2% 2%',
 		background: '#ddd',
@@ -745,6 +745,46 @@ function setDisplayedArticle(data){
 	})
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
+	
+	$(articleDiv).append(makeMediaGallery(data.media));
+	scrollArticle(0);
+}
+
+function makeMediaGallery(media){
+	$(".galleryDiv").detach();
+	var galleryDiv = document.createElement('div');
+	var galleryTitle = document.createElement('div');
+	$(galleryTitle).text("Associated Media");
+	$(galleryDiv).addClass("galleryDiv");
+	$(galleryDiv).css({
+		width: "100%",
+		padding: "1%",
+		background: "rgba(0,0,0,.6)",
+		'margin-bottom': '1%',
+		'font-size': articleTitleFont,
+		color: 'white',
+		overflow: 'auto',
+	})
+	$(galleryDiv).append(galleryTitle);
+	
+	for(var i = 0; i < media.length; i++){
+		if(media[i].type){
+			var image = document.createElement('div');
+			$(image).css({
+				width: '30%',
+				height: '18%',
+				'background-color': "black",
+				'background-image': "url("+ media[i].link +")",
+				'background-repeat':'no-repeat',
+				'background-position':'center center',
+				'background-size': 'contain',
+				'float': 'left',
+				'margin-left': '1%',
+			})
+			$(galleryDiv).append(image);
+		}
+	}
+	return galleryDiv;
 }
 
 function newlineToBr(string){
