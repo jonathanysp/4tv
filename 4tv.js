@@ -30,8 +30,8 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
-var loginScreen = false;
-var fetchArticles = false;
+var loginScreen = true;
+var fetchArticles = true;
 
 //sets out basic layout
 function init(){
@@ -107,7 +107,7 @@ function init(){
 		position: 'absolute',
 		right: '0%',
 		top: '0%',
-		height: '94%',
+		height: '92%',
 		width: '66%',
 		padding: '2% 2%',
 		background: '#ddd',
@@ -162,6 +162,7 @@ function init(){
 	$(settingsDiv).append(quitDiv);
 
 	searchBox = document.createElement('input');
+	$(searchBox).addClass("searchBox");
 	searchBox.placeholder = "Search";
 	searchBox.disabled = true;
 	$(searchBox).css({
@@ -635,6 +636,11 @@ function makeArticleListElement(data){
 		'margin-bottom': '1%',
 	})
 	$(elementTitle).text(data.title);
+	
+	unstarIMG = $('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>')
+	
+	$(elementTitle).prepend(unstarIMG);
+	
 	$(articleElement).append(elementTitle)
 
 	var elementSnippet = document.createElement('div');
@@ -667,21 +673,21 @@ function radialMenu(key){
 		$(radialMenuDiv).empty();
 		var image;
 		switch(key){
-			case 65: //share, a
+			case 49: //share, a
 				image = 'RBShare.png';
 				break;
-			case 83: //Flag, s
+			case 50: //Flag, s
 				image = 'RBFlag.png';
 				break;
-			case 68: //View, d
+			case 51: //View, d
 				image = 'RBView.png';
 				break;
-			case 70: //Search, f
+			case 52: //Search, f
 				//focus on search and allow keyboard to show up
 				break;	
 		}
 
-		if (key !== 70) {	
+		if (key !== 52) {	
 			$(radialMenuDiv).prepend('<img src="img/'+ image +'" alt="radialMenu" class="radialMenuImg" />');
 			$(radialMenuDiv).fadeIn(400);
 
@@ -696,6 +702,7 @@ function radialMenu(key){
 
 		} else {
 			$(searchBox).focus();
+			$(searchBox).val('');
 			mode = 'search';
 		}
 	});
@@ -745,6 +752,46 @@ function setDisplayedArticle(data){
 	})
 	$(offScreenDiv).detach();
 	$(articleTitle).after(images[index]);
+	
+	$(articleDiv).append(makeMediaGallery(data.media));
+	scrollArticle(0);
+}
+
+function makeMediaGallery(media){
+	$(".galleryDiv").detach();
+	var galleryDiv = document.createElement('div');
+	var galleryTitle = document.createElement('div');
+	$(galleryTitle).text("Associated Media");
+	$(galleryDiv).addClass("galleryDiv");
+	$(galleryDiv).css({
+		width: "100%",
+		padding: "1%",
+		background: "rgba(0,0,0,.6)",
+		'margin-bottom': '1%',
+		'font-size': articleTitleFont,
+		color: 'white',
+		overflow: 'auto',
+	})
+	$(galleryDiv).append(galleryTitle);
+	
+	for(var i = 0; i < media.length; i++){
+		if(media[i].type){
+			var image = document.createElement('div');
+			$(image).css({
+				width: '30%',
+				height: '18%',
+				'background-color': "black",
+				'background-image': "url("+ media[i].link +")",
+				'background-repeat':'no-repeat',
+				'background-position':'center center',
+				'background-size': 'contain',
+				'float': 'left',
+				'margin-left': '1%',
+			})
+			$(galleryDiv).append(image);
+		}
+	}
+	return galleryDiv;
 }
 
 function newlineToBr(string){
@@ -815,13 +862,13 @@ function keyStroke(ev) {
 	key = ((ev.which)||(ev.keyCode));
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
-			case 65: //Share - a
+			case 49: //Share - a
 				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
 				break;
-			case 83: //Flag - s
+			case 50: //Flag - s
 				radialKeyStroke(key, markRead, star, markUnread, unstar);
 				break;
-			case 68: //View - d
+			case 51: //View - d
 				var prevArticle = function() {
 					if (articleIndex > 0) {
 						previousArticle();
@@ -829,7 +876,7 @@ function keyStroke(ev) {
 				}
 				radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut);
 				break;
-			case 70: //Search - f
+			case 52: //Search - f
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
@@ -837,9 +884,10 @@ function keyStroke(ev) {
 		buttonPressed = 0;
 		$(radialMenuDiv).fadeOut(400);
 	}
-	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 70)){ 
+	else if (mode != 'search' && buttonPressed != key && (key == 49 || key == 50 || key == 51 || key == 52)){ 
 		radialMenu(key);
 		buttonPressed = key;
+		return false;
 	} else {
 		switch(key){
 			//down
