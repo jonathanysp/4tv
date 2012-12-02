@@ -751,6 +751,9 @@ function setDisplayedArticle(data){
 }
 
 function makeMediaGallery(media){
+	if(media.length < 1){
+		return;
+	}
 	$(".galleryDiv").detach();
 	var galleryDiv = document.createElement('div');
 	var galleryTitle = document.createElement('div');
