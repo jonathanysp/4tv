@@ -391,7 +391,7 @@ if(!loginScreen){
 
 
 function loginList(data){
-//make a couple logins.
+
 var loginElement = document.createElement('div');
 $(loginElement).addClass('loginElement');
 //$(loginElement.attr('id', data);
@@ -503,6 +503,7 @@ function addToList(array){
 
 function selectArticle(index){
 	articleIndex = index;
+	markRead();
 	$('.articleElement').css({
 		background: '#ddd',
 	})
@@ -813,7 +814,7 @@ function keyStroke(ev) {
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
 			case 65: //Share - a
-				//radialKeyStroke(key, func1, func2, func3, func4);
+				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
 				break;
 			case 83: //Flag - s
 				radialKeyStroke(key, markRead, star, markUnread, unstar);
@@ -882,6 +883,7 @@ function keyStroke(ev) {
 					case 'search':
 						$(searchBox).blur();
 						settingsFocus(true);
+					
 						mode = 'cog';
 						break;
 					case 'settings':
@@ -900,7 +902,7 @@ function keyStroke(ev) {
 						focusArticle(true);
 						break;
 					case 'search':
-						mode = 'article';
+					//	mode = 'article';
 						break;
 					case 'cog':
 						mode = 'settings';
@@ -913,6 +915,8 @@ function keyStroke(ev) {
 			case 37:
 				ev.preventDefault();
 				switch(mode){
+					case 'search':
+						break;
 					case 'login':
 						break;
 					case 'article':
