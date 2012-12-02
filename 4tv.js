@@ -16,6 +16,7 @@ var articleTitleFont;
 var articleBodyFont;
 var articleArray = [];
 var articleIndex = 0;
+var hintDiv;
 var feed; //used for list of articles, details will use diffbot or testArticles
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
 var cache = {};
@@ -36,6 +37,7 @@ var settingIndex = 0;
 var loginScreen = false;
 var fetchArticles = false;
 var cacheAmount = 5;
+var hintCount = 0;
 
 
 //sets out basic layout
@@ -384,6 +386,21 @@ function init(){
 		position: 'relative',
 		top: ($(optionsDiv).outerHeight()*0.10)+'px',
 	});
+	
+	hintDiv = document.createElement('div');
+	$(hintDiv).addClass("hintDiv");
+	$(hintDiv).text("Press right to see media");
+	$(hintDiv).css({
+		position: 'absolute',
+		top: '1.5%',
+		right: '2%',
+		background: 'rgba(102,153,204,.8)',
+		padding: '.5%',
+		color: 'white',
+		'font-size': '150%',
+		display: 'none'
+	});
+	$(root).append(hintDiv);
 
 	getArticleList();
 
@@ -841,6 +858,13 @@ function mediaToggle(){
 		}, 500, function(){
 			$(galleryDiv).css("display", "none");
 		});
+	}
+}
+
+function blinkHint(){
+	if(hintCount < 5){
+		$(hintDiv).fadeIn().delay(1000).fadeOut();
+		hintCount++;
 	}
 }
 
