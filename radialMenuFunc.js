@@ -4,7 +4,7 @@ function star() {
 	
 		
 		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
-		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/star.png" alt="star" height="35%"/></right>');
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<left><img src="img/star.png" alt="star" height="35%"/></left>');
 		
 }
 
@@ -12,7 +12,7 @@ function unstar() {
 	//change to unstarred 
 
 		$(articleArray[articleIndex]).children(".elementTitle").children().empty();
-		$(articleArray[articleIndex]).children(".elementTitle").prepend('<right><img src="img/unstar.png" alt="unstar" height="35%"/></right>');
+		$(articleArray[articleIndex]).children(".elementTitle").prepend('<left><img src="img/unstar.png" alt="unstar" height="35%"/></left>');
 }
 
 function markRead() {
