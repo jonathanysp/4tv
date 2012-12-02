@@ -989,6 +989,7 @@ function keyStroke(ev) {
 						break;
 					case 'list':
 						mode = 'article';
+						blinkHint();
 						focusArticle(true);
 						break;
 					case 'search':
