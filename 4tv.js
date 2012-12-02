@@ -162,6 +162,7 @@ if(!loginScreen){
 	$(settingsDiv).append(quitDiv);
 
 	searchBox = document.createElement('input');
+	$(searchBox).addClass("searchBox");
 	searchBox.placeholder = "Search";
 	searchBox.disabled = true;
 	$(searchBox).css({
@@ -694,6 +695,7 @@ function radialMenu(key){
 
 		} else {
 			$(searchBox).focus();
+			$(searchBox).val('');
 			mode = 'search';
 		}
 	});
@@ -838,6 +840,7 @@ function keyStroke(ev) {
 	else if (mode != 'search' && buttonPressed != key && (key == 65 || key == 83 || key == 68 || key == 70)){ 
 		radialMenu(key);
 		buttonPressed = key;
+		return false;
 	} else {
 		switch(key){
 			//down
