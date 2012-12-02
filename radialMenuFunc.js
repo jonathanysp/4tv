@@ -1,12 +1,22 @@
 function star() {
 	//change to starred 
 	$(articleArray[articleIndex]).addClass('starred');
-	
+		$(articleArray[articleIndex]).children(".elementTitle").css({
+		'color': 'rgb(255,215,0)',
+		
+	})
+		
 }
 
 function unstar() {
 	//change to unstarred 
 	$(articleArray[articleIndex]).removeClass('starred');
+	
+		$(articleArray[articleIndex]).addClass('starred');
+		$(articleArray[articleIndex]).children(".elementTitle").css({
+		'color': 'gray',
+		
+	})
 }
 
 function markRead() {
