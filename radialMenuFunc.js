@@ -1,30 +1,22 @@
 function star() {
-	
 	//change to starred 
-
-	//starBit = true;
-	console.log('star');
+	$(articleArray[articleIndex]).addClass('starred');
+	
 }
 
 function unstar() {
 	//change to unstarred 
-
-	//starBit = false;
-	console.log('unstar');
+	$(articleArray[articleIndex]).removeClass('starred');
 }
 
 function markRead() {
 	//change to read 
-
-	//readBit = true;
-	console.log('read');
+	$(articleArray[articleIndex]).addClass('read');
 }
 
 function markUnread() {
 	//change to unread 
-
-	//readBit = false;
-	console.log('unread');
+	$(articleArray[articleIndex]).removeClass('read');
 }
 
 function zoomIn() {

@@ -488,6 +488,7 @@ function addToList(array){
 }
 
 function selectArticle(index){
+	markRead();
 
 	$('.articleElement').css({
 		background: '#ddd',
