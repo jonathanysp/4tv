@@ -31,8 +31,8 @@ var settingsArray = [];
 var settingIndex = 0;
 
 //debug options
-var loginScreen = true;
-var fetchArticles = true;
+var loginScreen = false;
+var fetchArticles = false;
 
 //sets out basic layout
 function init(){
@@ -760,7 +760,7 @@ function setDisplayedArticle(data){
 	$(articleTitle).after(images[index]);
 	
 	$(articleDiv).append(makeMediaGallery(data.media));
-	scrollArticle(0);
+	articleDiv.scrollTop = 0;
 }
 
 function makeMediaGallery(media){
@@ -796,6 +796,7 @@ function makeMediaGallery(media){
 				'background-size': 'contain',
 				'float': 'left',
 				'margin-left': '1%',
+				'margin-bottom': '1%',
 			})
 			$(galleryDiv).append(image);
 		}
