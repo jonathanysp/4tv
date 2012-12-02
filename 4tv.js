@@ -39,7 +39,6 @@ var fetchArticles = false;
 var cacheAmount = 5;
 var hintCount = 0;
 
-
 //sets out basic layout
 function init(){
 	root = $(".root");
@@ -57,7 +56,7 @@ function init(){
 	background: '#888',
 	})
 	
-	$(loginDiv).prepend('<center><img src="img/Logo.png" alt="Logo" height="30%"/></center>');
+	$(loginDiv).prepend('<div class=filler/><center><img src="img/Logo.png" alt="Logo" height="30%"/></center><div class=filler/>');
 	root.append(loginDiv);
 	
 	
@@ -81,7 +80,7 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#6699cc',
+		background: '#363666',
 	})
 	//Logo
 	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
@@ -170,13 +169,13 @@ function init(){
 
 	searchBox = document.createElement('input');
 	$(searchBox).addClass("searchBox");
-	searchBox.placeholder = "Search";
+	searchBox.placeholder = " Search";
 	searchBox.disabled = true;
 	$(searchBox).css({
 		width: '100%',
 		height: '100%',
 		'font-size': '150%',
-		'border-color': 'black',
+		'border': '1px #fff solid',
 	})
 	$(searchBox).change(filterArticleElements($(searchBox).val()))
 	$(searchBox).keyup(function(){
@@ -184,13 +183,15 @@ function init(){
 	});
 	$(searchBox).focus(function(){
 		$(searchBox).css({
-			'border-color': '#6EA2DE',
+			'border': '1px #6EA2DE solid',
+			'outline': '2px #6EA2DE solid',
 			'box-shadow': '0px 0px 20px #6EA2DE',
 		})
 		searchBox.disabled = false;
 	}).blur(function(){
 		$(searchBox).css({
-			'border-color': 'black',
+			'border': '1px #fff solid',
+			'outline': '0px #000 solid',
 			'box-shadow': '0px 0px 0px #6EA2DE',
 		})
 		searchBox.disabled = true;
@@ -422,45 +423,12 @@ function loginList(data){
 
 	var loginElement = document.createElement('div');
 	$(loginElement).addClass('loginElement');
-	//$(loginElement.attr('id', data);
-	$(loginElement).css({
-	position: 'relative',
-		top: '10%',
-		left: '45%',
-		'-moz-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-		'-webkit-box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-		'box-shadow': 'inset 0px 1px 0px 0px #f9eca0',
-		'background-color': '#f0c911',
-		'-moz-border-radius': '21px',
-		'-webkit-border-radius': '21px',
-		'border-radius': '21px',
-		'border':  '3px solid #e65f44',
-		'display': 'block',
-		'color': '#c92200',
-		'font-family': 'arial',
-		'font-size': '28px',
-		'font-weight': 'bold',
-		'padding':'22px 29px',
-		'text-decoration':'none',
-		'text-shadow':'1px 1px 0px #ded17c',
-	})
 
 	$(loginDiv).append(loginElement);
-	$(loginElement).outerWidth($(loginDiv).outerWidth()/7);
-	//$(loginElement).outerHeight($(loginDiv).outerHeight()/8);
+	$(loginElement).outerWidth($(loginDiv).outerWidth()/6);
 
 	var logTitle = document.createElement('div');
 	$(logTitle).addClass('logTitle');
-	$(logTitle).css({
-	position: 'absolute',
-	left: '0%',
-	top: '0%',
-	height: '100%',
-			width: '100%',
-			'font-size': '120%',
-			'font-Weight': 'Bold',
-			'text-align': 'center',
-			})
 
 	$(logTitle).text(data);
 	$(loginElement).append(logTitle);
@@ -572,17 +540,13 @@ function previousLogin(){
 
 function selectLogin(logIndex){
 	if(logIndex > -1){
-	$(logArr[logIndex]).css({
-		'background-color': '#ddd',
-		});
+		$(logArr[logIndex]).addClass('selected');
 	}
 }
 
 function unselectLogin(index){
 	if(logIndex > -1){
-	$(logArr[logIndex]).css({
-		'background-color': '#f0c911',
-		})
+		$(logArr[logIndex]).removeClass('selected');
 	}
 }
 

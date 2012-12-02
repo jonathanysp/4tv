@@ -11,6 +11,9 @@
   border-bottom: 1px solid #fff;
 }
  
+.filler {
+	height: 60px;
+}
 .starred {
 	color: yellow;
 }
@@ -30,8 +33,44 @@
 	width: 10%;
 }
 
+.loginElement{
+	position: relative;
+	-moz-box-shadow: inset 0px 1px 0px 0px #9bd;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #9bd;
+	box-shadow: inset 0px 1px 0px 0px #9bd;
+	background-color: #336699;
+	display: block;
+	color: #fff;
+	font-size: 28px;
+	font-weight: bold;
+	padding: 27px 30px;
+	margin: 0 auto;
+	margin-bottom: 10px; 
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.loginElement.selected{
+	-moz-box-shadow: inset 0px 1px 0px 0px #fff;
+	-webkit-box-shadow: inset 0px 1px 0px 0px #fff;
+	box-shadow: inset 0px 1px 0px 0px #fff;
+	color: #555;
+	background-color: #ccc;
+}
+
+.logTitle{
+	position: absolute;
+	left: 0%;
+	top: 0%;
+	height: 100%;
+	width: 100%;
+	font-size: 120%;
+	font-Weight: Bold;
+	text-align: center;
+}
+
 .articleElement.selected {
-	color: #ffffff;
+	color: #fff;
 	background-color: #888;
 }
 
