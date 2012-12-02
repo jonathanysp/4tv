@@ -32,7 +32,8 @@ var settingIndex = 0;
 
 //debug options
 var loginScreen = false;
-var fetchArticles = false;
+var fetchArticles = true;
+var cacheAmount = 5;
 
 //sets out basic layout
 function init(){
@@ -474,24 +475,27 @@ function getArticleList(){
 		for (var i = 0; i < feed.entries.length; i++){
 			articleArray.push(makeArticleListElement(feed.entries[i]));
 		}
-		//getArticleDetails(feed.entries[0].link);
+		precache(feed);
 		selectArticle(0);
 	}, 10)
 }
 
 //uses diffbot (only use in final build)
 //gets article details and sets it as main display article
-//maybe do some caching??
-function getArticleDetails(link){
+function getArticleDetails(link, silent){
 	
 	if(fetchArticles){
 		if(cache[link]){
-			setDisplayedArticle(cache[link]);
+			if(!silent){
+				setDisplayedArticle(cache[link]);
+			}
 			return cache[link];
 		} else {
 			var req = "http://www.diffbot.com/api/article?token="+diffBotToken+"&format=json&callback=?&tags=true&url=" + link;
 			$.getJSON(req, function(json){
-				setDisplayedArticle(json);
+				if(!silent){
+					setDisplayedArticle(json);
+				}
 				cache[link] = json;
 				return json;
 			})
@@ -499,6 +503,12 @@ function getArticleDetails(link){
 	} else {
 		//returns article details when supplied with link
 		setDisplayedArticle(testArticles[link]);
+	}
+}
+
+function precache(){
+	for(var i = 0; i <= cacheAmount; i++){
+		getArticleDetails(feed.entries[i].link, true);
 	}
 }
 
@@ -764,7 +774,7 @@ function setDisplayedArticle(data){
 }
 
 function makeMediaGallery(media){
-	if(media.length < 1){
+	if(media === undefined){
 		return;
 	}
 	$(".galleryDiv").detach();
