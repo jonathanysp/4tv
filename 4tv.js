@@ -33,7 +33,7 @@ var settingIndex = 0;
 
 //debug options
 
-var loginScreen = false;
+var loginScreen = true;
 var fetchArticles = false;
 var cacheAmount = 5;
 
