@@ -20,7 +20,7 @@
 
 .articleElement.read {
 	color: #555;
-	background-color: #bbb;
+	background-color: #c0c0c0;
 }
 
 .articleBody {
@@ -103,6 +103,9 @@
 	background-color: #888;
 }
 
+.articleElement.selected.read.nofocus {
+	background-color: #959595;
+}
 
 .articleElement.read.selected{
 	background-color: #888;

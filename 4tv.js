@@ -560,6 +560,7 @@ function nextArticle(){
 function previousArticle(){
 	if(articleIndex == 0){
 		//focus search bar
+		$('.selected').addClass('nofocus');
 		mode = 'search';
 		$(searchBox).focus();		
 	} else {
@@ -840,6 +841,7 @@ function scrollArticle(pos){
 	$(articleDiv).stop().animate({scrollTop: $(articleDiv).scrollTop() + pos}, 300);
 }
 
+
 function focusArticle(bool){
 	if(bool){
 		$(articleDiv).css({
@@ -939,6 +941,7 @@ function keyStroke(ev) {
 						break;
 					case 'search':
 						mode = 'list';
+						$('.nofocus').removeClass('nofocus');
 						$(searchBox).blur();
 						break;
 					case 'article':
@@ -972,7 +975,7 @@ function keyStroke(ev) {
 						settingsFocus(true);
 						
 						mode = 'settings';
-						$('.settingsDiv').css('background', '#ccc');
+						$('.settingsDiv').css('background', '#bfd1e5');
 						selectSetting();
 						break;
 					case 'settings':
@@ -989,6 +992,7 @@ function keyStroke(ev) {
 					case 'list':
 						mode = 'article';
 						blinkHint();
+						$('.selected').addClass('nofocus');
 						focusArticle(true);
 						break;
 					case 'search':
@@ -1014,6 +1018,7 @@ function keyStroke(ev) {
 						break;
 					case 'article':
 						focusArticle(false);
+						$('.nofocus').removeClass('nofocus');
 						mode = 'list';
 						break;
 					case 'settings':
@@ -1037,6 +1042,7 @@ function keyStroke(ev) {
 						unselectLogin(logIndex);
 						logIndex = 0;
 						//selectLogin(logIndex);
+						$('.nofocus').removeClass('nofocus');
 						mode = 'list';
 						$('.settingsDiv').css('background', '#ddd');
 						$('.settingsDiv').css('display', 'none');
