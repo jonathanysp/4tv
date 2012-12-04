@@ -4,7 +4,7 @@
  - cursor keys navigation
 	 - JP
  - radial menu gui + implementation - Working on
-	 - margi
+	 - Margi
  - login screen gui + implementation
 	 - Dan
  - menu/options bar - Working on
@@ -20,3 +20,11 @@
 
 ## Bugs
  - Search bar buggy
+ 
+ - topbar color little less dark
+ - auto fetch
+ - login screen first user bug
+ - status div
+ - size of settings buttons
+ - spacing between buttons and text
+ - color of article when selected
