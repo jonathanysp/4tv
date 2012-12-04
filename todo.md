@@ -1,30 +1,31 @@
 # Todo:
 
 ## Features
- - cursor keys navigation
+ - cursor keys navigation - Done
 	 - JP
- - radial menu gui + implementation - Working on
+ - radial menu gui + implementation - Done
 	 - Margi
- - login screen gui + implementation
+ - login screen gui + implementation - Done
 	 - Dan
- - menu/options bar - Working on
+ - menu/options bar - Working on - Done
 	 - Margi
- - status bar
- - logo on top bar - Done
- - zoom in/out
+ - status bar - Working on (JP)
+ - logo on top bar - Done 
+ - zoom in/out - Done
  - sort article list
  - rss source adding/removing
  - T9 input
  - feed caching/saving
- - Adding settings
+ - Adding settings - Working on
 
 ## Bugs
- - Search bar buggy
+ - Search bar buggy - done?
  
- - topbar color little less dark
+ - topbar color little less dark - Done
  - auto fetch
- - login screen first user bug
+ - login screen first user bug - Done
  - status div
- - size of settings buttons
- - spacing between buttons and text
- - color of article when selected
+ - size of settings buttons - Done
+ - spacing between buttons and text - Done
+ - View radial menu disappears only when view button is pressed again. - done
+ - color of article when selected - done

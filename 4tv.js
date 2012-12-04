@@ -80,10 +80,10 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#363666',
+		background: '#5e68c4',
 	})
 	//Logo
-	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
+	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%" class="logoImage"/>');
 
 	//Settings Cog
 	settingsCogDiv = document.createElement('div');
@@ -364,30 +364,14 @@ function init(){
 	
 	root.append(optionsDiv);
 
-	//CSS of optionDiv
-	$(".optionSpanDiv").css({
-		float: 'right',
-		display: 'table-cell',
-		'text-align': 'left',
-		width: '15%',
-		'vertical-align': 'middle',
-	});
 
-
-	$(".optionSpan").css({
-		display: 'inline-block',
-		'font-size': '200%',
-		'vertical-align': 'middle',
-	});
-
+	//optButton css
 	$(".optButton").css({
-		display: 'inline-block',
-		'vertical-align': 'middle',
-		height: '90%',
-		position: 'relative',
-		top: ($(optionsDiv).outerHeight()*0.03)+'px',
+		top: (($(optionsDiv).outerHeight() - $(".optButton").outerHeight())*0.5)+'px',
 	});
 	
+	
+	//For more media div
 	hintDiv = document.createElement('div');
 	$(hintDiv).addClass("hintDiv");
 	$(hintDiv).text("Press \u21e8 to see media");
@@ -539,14 +523,12 @@ function previousLogin(){
 }
 
 function selectLogin(logIndex){
-	console.log(logIndex);
 	if(logIndex > -1){
 		$(logArr[logIndex]).addClass('selected');
 	}
 }
 
 function unselectLogin(index){
-	console.log(index + "rawr");
 	if(logIndex > -1){
 		$(logArr[logIndex]).removeClass('selected');
 	}
@@ -861,7 +843,7 @@ function scrollArticle(pos){
 function focusArticle(bool){
 	if(bool){
 		$(articleDiv).css({
-			background: '#ccc',
+			background: '#bfd1e5',
 		})
 	} else {
 		$(articleDiv).css({
@@ -934,8 +916,10 @@ function keyStroke(ev) {
 				break;	
 		}	
 
-		buttonPressed = 0;
-		$(radialMenuDiv).fadeOut(400);
+		if (buttonPressed !== 51 || (buttonPressed === 51 && key === 51)){
+			buttonPressed = 0;
+			$(radialMenuDiv).fadeOut(400);
+		}
 	}
 	else if (mode != 'search' && buttonPressed != key && (key == 49 || key == 50 || key == 51 || key == 52)){ 
 		radialMenu(key);

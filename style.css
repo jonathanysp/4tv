@@ -33,6 +33,35 @@
 	width: 10%;
 }
 
+.optionSpanDiv {
+	float: right;
+	display: table-cell;
+	text-align: left;
+	width: 15%;
+	vertical-align: middle;
+}
+
+.optionSpan{
+	font-weight: bold;
+	font-family: "Segoe UI", Frutiger, "Frutiger Linotype", Arial, sans-serif;
+	display: inline-block;
+	font-size: 200%;
+	vertical-align: middle;
+	padding-left: 7px;
+}
+
+.optButton{
+	position: relative;
+	height: 90%;
+	display: inline-block;
+	font-size: 200%;
+	vertical-align: middle;
+}
+
+.logoImage{
+	padding-left: 10px;
+}
+
 .loginElement{
 	position: relative;
 	-moz-box-shadow: inset 0px 1px 0px 0px #9bd;
