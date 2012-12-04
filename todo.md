@@ -4,7 +4,7 @@
  - cursor keys navigation
 	 - JP
  - radial menu gui + implementation - Working on
-	 - Margi
+	 - margi
  - login screen gui + implementation
 	 - Dan
  - menu/options bar - Working on

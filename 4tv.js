@@ -383,9 +383,9 @@ function init(){
 	$(".optButton").css({
 		display: 'inline-block',
 		'vertical-align': 'middle',
-		height: '92%',
+		height: '90%',
 		position: 'relative',
-		top: ($(optionsDiv).outerHeight()*0.10)+'px',
+		top: ($(optionsDiv).outerHeight()*0.03)+'px',
 	});
 	
 	hintDiv = document.createElement('div');
@@ -514,7 +514,7 @@ function addToList(array){
 function selectArticle(index){
 	articleIndex = index;
 	markRead();
-	$('.selected').removeClass('selected');
+	$('.articleElement.selected').removeClass('selected');
 	
 	$(articleArray[index]).addClass('selected');
 	getArticleDetails($(articleArray[index]).data('data').link);
@@ -539,12 +539,14 @@ function previousLogin(){
 }
 
 function selectLogin(logIndex){
+	console.log(logIndex);
 	if(logIndex > -1){
 		$(logArr[logIndex]).addClass('selected');
 	}
 }
 
 function unselectLogin(index){
+	console.log(index + "rawr");
 	if(logIndex > -1){
 		$(logArr[logIndex]).removeClass('selected');
 	}
