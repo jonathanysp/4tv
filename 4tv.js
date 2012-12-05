@@ -80,10 +80,10 @@ function init(){
 		left: '0%',
 		height: '6%',
 		width: '30%',
-		background: '#363666',
+		background: '#5e68c4',
 	})
 	//Logo
-	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%"/>');
+	$(topDiv).prepend('<img src="img/Logo.png" alt="Logo" height="100%" class="logoImage"/>');
 
 	//Settings Cog
 	settingsCogDiv = document.createElement('div');
@@ -364,30 +364,14 @@ function init(){
 	
 	root.append(optionsDiv);
 
-	//CSS of optionDiv
-	$(".optionSpanDiv").css({
-		float: 'right',
-		display: 'table-cell',
-		'text-align': 'left',
-		width: '15%',
-		'vertical-align': 'middle',
-	});
 
-
-	$(".optionSpan").css({
-		display: 'inline-block',
-		'font-size': '200%',
-		'vertical-align': 'middle',
-	});
-
+	//optButton css
 	$(".optButton").css({
-		display: 'inline-block',
-		'vertical-align': 'middle',
-		height: '92%',
-		position: 'relative',
-		top: ($(optionsDiv).outerHeight()*0.10)+'px',
+		top: (($(optionsDiv).outerHeight() - $(".optButton").outerHeight())*0.5)+'px',
 	});
 	
+	
+	//For more media div
 	hintDiv = document.createElement('div');
 	$(hintDiv).addClass("hintDiv");
 	$(hintDiv).text("Press \u21e8 to see media");
@@ -515,7 +499,7 @@ function addToList(array){
 function selectArticle(index){
 	articleIndex = index;
 	markRead();
-	$('.selected').removeClass('selected');
+	$('.articleElement.selected').removeClass('selected');
 	
 	$(articleArray[index]).addClass('selected');
 	getArticleDetails($(articleArray[index]).data('data').link);
@@ -577,6 +561,7 @@ function nextArticle(){
 function previousArticle(){
 	if(articleIndex == 0){
 		//focus search bar
+		$('.selected').addClass('nofocus');
 		mode = 'search';
 		$(searchBox).focus();		
 	} else {
@@ -879,10 +864,11 @@ function scrollArticle(pos){
 	$(articleDiv).stop().animate({scrollTop: $(articleDiv).scrollTop() + pos}, 300);
 }
 
+
 function focusArticle(bool){
 	if(bool){
 		$(articleDiv).css({
-			background: '#ccc',
+			background: '#bfd1e5',
 		})
 	} else {
 		$(articleDiv).css({
@@ -955,8 +941,10 @@ function keyStroke(ev) {
 				break;	
 		}	
 
-		buttonPressed = 0;
-		$(radialMenuDiv).fadeOut(400);
+		if (buttonPressed !== 51 || (buttonPressed === 51 && key === 51)){
+			buttonPressed = 0;
+			$(radialMenuDiv).fadeOut(400);
+		}
 	}
 	else if (mode != 'search' && buttonPressed != key && (key == 49 || key == 50 || key == 51 || key == 52)){ 
 		radialMenu(key);
@@ -976,6 +964,7 @@ function keyStroke(ev) {
 						break;
 					case 'search':
 						mode = 'list';
+						$('.nofocus').removeClass('nofocus');
 						$(searchBox).blur();
 						break;
 					case 'article':
@@ -1009,7 +998,7 @@ function keyStroke(ev) {
 						settingsFocus(true);
 						
 						mode = 'settings';
-						$('.settingsDiv').css('background', '#ccc');
+						$('.settingsDiv').css('background', '#bfd1e5');
 						selectSetting();
 						break;
 					case 'settings':
@@ -1026,6 +1015,7 @@ function keyStroke(ev) {
 					case 'list':
 						mode = 'article';
 						blinkHint();
+						$('.selected').addClass('nofocus');
 						focusArticle(true);
 						break;
 					case 'search':
@@ -1051,6 +1041,7 @@ function keyStroke(ev) {
 						break;
 					case 'article':
 						focusArticle(false);
+						$('.nofocus').removeClass('nofocus');
 						mode = 'list';
 						break;
 					case 'settings':
@@ -1074,6 +1065,7 @@ function keyStroke(ev) {
 						unselectLogin(logIndex);
 						logIndex = 0;
 						//selectLogin(logIndex);
+						$('.nofocus').removeClass('nofocus');
 						mode = 'list';
 						$('.settingsDiv').css('background', '#ddd');
 						$('.settingsDiv').css('display', 'none');

@@ -20,7 +20,7 @@
 
 .articleElement.read {
 	color: #555;
-	background-color: #bbb;
+	background-color: #c0c0c0;
 }
 
 .articleBody {
@@ -31,6 +31,35 @@
 	background-color: #6699cc;
 	color: #ffffff;
 	width: 10%;
+}
+
+.optionSpanDiv {
+	float: right;
+	display: table-cell;
+	text-align: left;
+	width: 15%;
+	vertical-align: middle;
+}
+
+.optionSpan{
+	font-weight: bold;
+	font-family: "Segoe UI", Frutiger, "Frutiger Linotype", Arial, sans-serif;
+	display: inline-block;
+	font-size: 200%;
+	vertical-align: middle;
+	padding-left: 7px;
+}
+
+.optButton{
+	position: relative;
+	height: 90%;
+	display: inline-block;
+	font-size: 200%;
+	vertical-align: middle;
+}
+
+.logoImage{
+	padding-left: 10px;
 }
 
 .loginElement{
@@ -74,6 +103,9 @@
 	background-color: #888;
 }
 
+.articleElement.selected.read.nofocus {
+	background-color: #959595;
+}
 
 .articleElement.read.selected{
 	background-color: #888;
