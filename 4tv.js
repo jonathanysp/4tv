@@ -35,7 +35,7 @@ var settingIndex = 0;
 //debug options
 
 var loginScreen = true;
-var fetchArticles = false;
+var fetchArticles = true;
 var cacheAmount = 5;
 var hintCount = 0;
 
@@ -458,7 +458,8 @@ function loginList(data){
 //only use testArticles from now and dont fetch;
 function getArticleList(){
 	if(fetchArticles){
-		var url = "http://www.npr.org/rss/rss.php?id=1001";
+		//var url = "http://www.npr.org/rss/rss.php?id=1001";
+		var url = "http://feeds.reuters.com/reuters/topNews?format=xml";
 	} else {
 		var url = 'http://dl.dropbox.com/u/112925/topNews.xml';
 	}
@@ -766,7 +767,29 @@ function setDisplayedArticle(data){
 
 function makeMediaGallery(media){
 	if(media === undefined){
-		$('.mediaImage').detach();
+		$(".galleryDiv").detach();
+		galleryDiv = document.createElement('div');
+		var galleryTitle = document.createElement('div');
+		var tip = document.createElement('div');
+		$(galleryTitle).text("No Associated Media");
+		$(galleryTitle).css("margin-bottom", "1%");
+		$(galleryDiv).addClass("galleryDiv");
+		$(galleryDiv).css({
+			position: 'absolute',
+			width: "0%",
+			padding: "1%",
+			top: "4%",
+			background: "rgba(0,0,0,.9)",
+			'margin-bottom': '1%',
+			'font-size': articleTitleFont,
+			color: 'white',
+			overflow: 'auto',
+			display: 'none',
+			right:0,
+		})
+		$(galleryDiv).append(tip);
+		$(galleryDiv).append(galleryTitle);
+		$(root).append(galleryDiv);
 		return;
 	}
 	$(".galleryDiv").detach();
