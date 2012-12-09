@@ -33,13 +33,21 @@ var settingsCog;
 var settingsDiv;
 var settingsArray = [];
 var settingIndex = 0;
+var imageArray = [];
+var imageIndex;
 
 //debug options
-
 var loginScreen = false;
 var fetchArticles = true;
-var cacheAmount = 5;
+var cacheAmount = 0;
 var hintCount = 0;
+
+//feeds
+var npr = "http://www.npr.org/rss/rss.php?id=1001";
+var reuters = "http://feeds.reuters.com/reuters/topNews?format=xml";
+var offline = 'http://dl.dropbox.com/u/112925/topNews.xml';
+var url;
+fetchArticles ? url = npr : url = offline;
 
 //sets out basic layout
 function init(){
@@ -389,6 +397,32 @@ function init(){
 	});
 	$(root).append(hintDiv);
 
+	var slideShowDiv = document.createElement('div');
+	$(slideShowDiv).addClass('slideShowDiv');
+	$(slideShowDiv).css({
+		position: 'absolute',
+		width: '80%',
+		height: '80%',
+		padding: '2% 2%',
+		top: '5%',
+		left: '9%',
+		'background-color': 'rgba(0,0,0,.9)',
+		'z-index': 10,
+		display: 'none',
+	})
+	var slideShow = document.createElement('div');
+	$(slideShow).addClass('slideShow');
+	$(slideShow).css({
+		'width': '100%',
+		'height': '100%',
+		'background-color': "black",
+		'background-repeat':'no-repeat',
+		'background-position':'center center',
+		'background-size': 'contain',
+	})
+	$(slideShowDiv).append(slideShow);
+	$(root).append(slideShowDiv);
+
 	getArticleList();
 
 	scrollBarWidth = 0.005 * ($(listDiv).outerWidth() + $(articleDiv).outerWidth());
@@ -443,15 +477,8 @@ function loginList(data){
 //fetches xml
 //only use testArticles from now and dont fetch;
 function getArticleList(){
-	if(fetchArticles){
-		//var url = "http://www.npr.org/rss/rss.php?id=1001";
-		var url = "http://feeds.reuters.com/reuters/topNews?format=xml";
-	} else {
-		var url = 'http://dl.dropbox.com/u/112925/topNews.xml';
-	}
-
 	$.jGFeed(url, function(xml){
-		console.log('fetching articles');
+		//console.log('fetching articles');
 		feed.feedUrl = xml.feedUrl;
 		feed.title = xml.title;
 		var first = false;
@@ -459,7 +486,7 @@ function getArticleList(){
 			first = true;
 		}
 		for (var i = feed.entries.length; i < xml.entries.length; i++){
-			console.log('adding article: ' + xml.entries[i].title);
+			//console.log('adding article: ' + xml.entries[i].title);
 			feed.entries.push(xml.entries[i]);
 			articleArray.push(makeArticleListElement(feed.entries[i]));
 		}
@@ -707,10 +734,13 @@ function radialMenu(key){
 
 			//CSS of radialMenu Images	
 			$(".radialMenuImg").css({
+				height: '548px',
+				width: '548px',
 				position: 'relative',
 				top: topPadding+'px',
 				'text-align': 'center',
 			});
+
 
 		} else {
 			$(searchBox).focus();
@@ -770,6 +800,7 @@ function setDisplayedArticle(data){
 }
 
 function makeMediaGallery(media){
+	imageArray = [];
 	if(media === undefined){
 		$(".galleryDiv").detach();
 		galleryDiv = document.createElement('div');
@@ -816,7 +847,7 @@ function makeMediaGallery(media){
 		display: 'none',
 		right:0,
 	})
-	$(tip).text("Exit \u21e8");
+	$(tip).text("Exit \u21e9");
 	$(tip).css({
 		position: 'absolute',
 		top: "1%",
@@ -844,11 +875,30 @@ function makeMediaGallery(media){
 				'margin-left': '1%',
 				'margin-bottom': '1%',
 			})
+			if(i == 0){
+				$(image).css('border', '1px solid white');
+			}
 			$(galleryDiv).append(image);
+			imageArray.push(image);
 		}
 	}
+	imageIndex = 0;
 	$(root).append(galleryDiv);
 }
+
+function highlightImage(index){
+	if(index > imageArray.length){
+		imageIndex = imageArray.length;
+		index = imageindex;
+	} else if(index < 0){
+		imageindex = 0;
+		index = imageindex;
+	}
+	$('.mediaImage').css('border', '0px solid white');
+	$(imageArray[index]).css('border', '1px solid white');
+}
+
+
 
 function mediaToggle(toggle){
 	if(toggle){
@@ -863,6 +913,11 @@ function mediaToggle(toggle){
 			$(galleryDiv).css("display", "none");
 		});
 	}
+}
+
+function setSlideImage(link){
+	console.log(link);
+	$('.slideShow').css('background-image', link);
 }
 
 function blinkHint(){
@@ -1024,6 +1079,11 @@ function keyStroke(ev) {
 					case 'settings':
 						nextSetting();
 						break;
+					case 'media':
+						mediaToggle(false);
+						$('.slideShowDiv').fadeOut();
+						mode = 'article';
+						break;
 				}
 				break;
 			//up
@@ -1077,8 +1137,9 @@ function keyStroke(ev) {
 						mode = 'media';
 						break;
 					case 'media':
-						mediaToggle(false);
-						mode = 'article';
+						imageIndex++;
+						highlightImage(imageIndex);
+						setSlideImage($(imageArray[imageIndex]).css('background-image'));
 						break;
 				}
 				break;
@@ -1098,6 +1159,11 @@ function keyStroke(ev) {
 					case 'settings':
 						mode = 'cog';
 						$('.settingsDiv').css('background', '#ddd');
+						break;
+					case 'media':
+						imageIndex--;
+						highlightImage(imageIndex);
+						setSlideImage($(imageArray[imageIndex]).css('background-image'));
 						break;
 				}
 			break;
@@ -1121,6 +1187,9 @@ function keyStroke(ev) {
 						$('.settingsDiv').css('background', '#ddd');
 						$('.settingsDiv').css('display', 'none');
 						break;
+					case 'media':
+						$('.slideShowDiv').fadeToggle();
+						setSlideImage($(imageArray[imageIndex]).css('background-image'));
 				}
 			break;
 		}
