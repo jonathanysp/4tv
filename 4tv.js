@@ -968,8 +968,8 @@ function leaveSettingsHint(){
 	$(settingsHintDiv).text("Press \u21e6 to exit the Settings Menu");
 	$(settingsHintDiv).css({
 		position: 'absolute',
-		top: '31.5%',
-		right: '10%',
+		top: '33%',
+		right: '0%',
 		background: 'rgba(102,153,204,.8)',
 		padding: '.5%',
 		color: 'white',
