@@ -17,7 +17,8 @@ var articleBodyFont;
 var articleArray = [];
 var articleIndex = 0;
 var hintDiv;
-var feed; //used for list of articles, details will use diffbot or testArticles
+var feed = new Object(); //used for list of articles, details will use diffbot or testArticles
+feed.entries = [];
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
 var cache = {};
 
@@ -34,7 +35,7 @@ var settingIndex = 0;
 
 //debug options
 
-var loginScreen = true;
+var loginScreen = false;
 var fetchArticles = true;
 var cacheAmount = 5;
 var hintCount = 0;
@@ -449,13 +450,23 @@ function getArticleList(){
 	}
 
 	$.jGFeed(url, function(xml){
-		feed = xml;
-		for (var i = 0; i < feed.entries.length; i++){
+		console.log('fetching articles');
+		feed.feedUrl = xml.feedUrl;
+		feed.title = xml.title;
+		var first = false;
+		if(feed.entries.length == 0){
+			first = true;
+		}
+		for (var i = feed.entries.length; i < xml.entries.length; i++){
+			console.log('adding article: ' + xml.entries[i].title);
+			feed.entries.push(xml.entries[i]);
 			articleArray.push(makeArticleListElement(feed.entries[i]));
 		}
-		precache(feed);
-		selectArticle(0);
-	}, 10)
+		if(first){
+			precache(feed);
+			selectArticle(0);
+		}
+	}, (6 + feed.entries.length));
 }
 
 //uses diffbot (only use in final build)
@@ -503,6 +514,13 @@ function selectArticle(index){
 	
 	$(articleArray[index]).addClass('selected');
 	getArticleDetails($(articleArray[index]).data('data').link);
+	
+	//preload next article
+	if(articleArray.length > index + 1){
+		getArticleDetails($(articleArray[index + 1]).data('data').link, true);
+	} else {
+		getArticleList();
+	}
 }
 
 
