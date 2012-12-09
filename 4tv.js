@@ -17,11 +17,12 @@ var articleBodyFont;
 var articleArray = [];
 var articleIndex = 0;
 var hintDiv;
+var settingsHintDiv;
 var feed = new Object(); //used for list of articles, details will use diffbot or testArticles
 feed.entries = [];
 var diffBotToken = "ebae03a3b0bfdf0ac146712a862c39ab";
 var cache = {};
-
+var settingsHint = 0;
 var articleIndex;
 var mode = 'login';
 var scrollFactor = 10;
@@ -123,7 +124,7 @@ function init(){
 		'display': 'none',
 	})
 	root.append(settingsDiv);
-
+	leaveSettingsHint();
 	//settings (should make dynamic for later TODO)
 	var switchUserDiv = document.createElement('div');
 	$(switchUserDiv).addClass("switchUserDiv");
@@ -898,14 +899,40 @@ function focusArticle(bool){
 function settingsFocus(bool){
 	if (bool){
 		settingsCog.src = 'img/cog2.svg';
-		$(settingsDiv).fadeIn();
+		$(settingsDiv).fadeIn("slow", blinkSettingsHint);
 	} else {
 		settingsCog.src = 'img/cog.svg';
 		$(settingsDiv).fadeOut();
 	}
 }
 
+function leaveSettingsHint(){
 
+	settingsHintDiv = document.createElement('div');
+	$(settingsHintDiv).addClass("settingsHintDiv");
+	$(settingsHintDiv).text("Press \u21e6 to exit the Settings Menu");
+	$(settingsHintDiv).css({
+		position: 'absolute',
+		top: '31.5%',
+		right: '10%',
+		background: 'rgba(102,153,204,.8)',
+		padding: '.5%',
+		color: 'white',
+		'font-size': '250%',
+		display: 'none',
+	});
+	$(settingsDiv).append(settingsHintDiv);
+	
+	
+	//$(settingsHintDiv).fadeIn().delay(1000).fadeOut();
+		
+}
+function blinkSettingsHint(){
+	if(settingsHint < 3){
+		$(settingsHintDiv).fadeIn().delay(1000).fadeOut();
+		settingsHint++;
+	}
+}
 
 function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
 	switch(key){
@@ -940,13 +967,13 @@ function keyStroke(ev) {
 	key = ((ev.which)||(ev.keyCode));
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
-			case 49: //Share - a
+			case 49: //Share - 1
 				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
 				break;
-			case 50: //Flag - s
+			case 50: //Flag - 2
 				radialKeyStroke(key, markRead, star, markUnread, unstar);
 				break;
-			case 51: //View - d
+			case 51: //View - 3
 				var prevArticle = function() {
 					if (articleIndex > 0) {
 						previousArticle();
@@ -954,7 +981,7 @@ function keyStroke(ev) {
 				}
 				radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut);
 				break;
-			case 52: //Search - f
+			case 52: //Search - 4
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
@@ -982,6 +1009,7 @@ function keyStroke(ev) {
 						break;
 					case 'search':
 						mode = 'list';
+						focusArticle(false); //added this so that there is no scrolling through the article list with a selected (blue bg) article on the right.
 						$('.nofocus').removeClass('nofocus');
 						$(searchBox).blur();
 						break;
@@ -1013,11 +1041,16 @@ function keyStroke(ev) {
 						break;
 					case 'search':
 						$(searchBox).blur();
+						//leaveSettingsHint();
 						settingsFocus(true);
 						
 						mode = 'settings';
+						//leaveSettingsHint();
 						$('.settingsDiv').css('background', '#bfd1e5');
+						
+						
 						selectSetting();
+						
 						break;
 					case 'settings':
 						prevSetting();
