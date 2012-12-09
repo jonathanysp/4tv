@@ -706,10 +706,13 @@ function radialMenu(key){
 
 			//CSS of radialMenu Images	
 			$(".radialMenuImg").css({
+				height: '548px',
+				width: '548px',
 				position: 'relative',
 				top: topPadding+'px',
 				'text-align': 'center',
 			});
+
 
 		} else {
 			$(searchBox).focus();
