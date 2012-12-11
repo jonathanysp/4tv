@@ -989,21 +989,29 @@ function blinkSettingsHint(){
 	}
 }
 
-function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
+function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown, img) {
+	var imgName;
+	var func;
 	switch(key){
 		case 37: //left
-			funcLeft();
+			imgName = 'img/' + img + 'Left.png';
+			func = funcLeft;
 			break;
 		case 38: //up
-			funcUp();
+			imgName = 'img/' + img + 'Up.png';
+			func = funcUp;
 			break;
 		case 39: //right
-			funcRight();
+			imgName = 'img/' + img + 'Right.png';
+			func = funcRight;
 			break;
 		case 40: //down
-			funcDown();
+			imgName = 'img/' + img + 'Down.png';
+			func = funcDown;
 			break;
 	}
+	$('.radialMenuImg').attr('src', imgName);
+	func();
 }
 
 //keypress handlers;
@@ -1020,13 +1028,17 @@ function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown) {
  */
 function keyStroke(ev) {
 	key = ((ev.which)||(ev.keyCode));
+	
+	console.log(key);
+	console.log(buttonPressed);
+
 	if (buttonPressed !== 0) {
 		switch(buttonPressed){
 			case 49: //Share - 1
-				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail);
+				radialKeyStroke(key, shareTwitter, shareGooglePlus, shareFB, shareEmail, 'RBShare');
 				break;
 			case 50: //Flag - 2
-				radialKeyStroke(key, markRead, star, markUnread, unstar);
+				radialKeyStroke(key, markRead, star, markUnread, unstar, 'RBFlag');
 				break;
 			case 51: //View - 3
 				var prevArticle = function() {
@@ -1034,17 +1046,28 @@ function keyStroke(ev) {
 						previousArticle();
 					}
 				}
-				radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut);
+				if (key !== 51) {
+					radialKeyStroke(key, prevArticle, zoomIn, nextArticle, zoomOut, 'RBView');
+				}
 				break;
 			case 52: //Search - 4
 				//focus on search and allow keyboard to show up
 				break;	
 		}	
+		
+		console.log('blah');
+		console.log(key);
+		console.log(buttonPressed);
 
-		if (buttonPressed !== 51 || (buttonPressed === 51 && key === 51)){
-			buttonPressed = 0;
-			$(radialMenuDiv).fadeOut(400);
-		}
+		setTimeout(function() {
+			if (buttonPressed !== 51 || (buttonPressed === 51 && key === 51)){
+				buttonPressed = 0;
+				$(radialMenuDiv).fadeOut(400);
+			}
+			else {
+				$('.radialMenuImg').attr('src', 'img/RBView.png');
+			}
+		}, 500);
 	}
 	else if (mode != 'search' && buttonPressed != key && (key == 49 || key == 50 || key == 51 || key == 52)){ 
 		radialMenu(key);
