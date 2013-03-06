@@ -1016,7 +1016,7 @@ function radialKeyStroke(key, funcLeft, funcUp, funcRight, funcDown, img) {
 			break;
 	}
 	$('.radialMenuImg').attr('src', imgName);
-	func();
+	//func();
 }
 
 //keypress handlers;
